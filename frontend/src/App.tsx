@@ -1,7 +1,13 @@
+import { Route, Routes } from "react-router-dom"
+import PublicLayout from "./layouts/PublicLayout"
 
 const App = () => {
   return (
-    <div className='text-red-500 w-full h-48 bg-amber-800'>Hello World</div>
+    <main>
+      <Routes>
+        <Route path="/" element={<PublicLayout/>}/>
+      </Routes>
+    </main>
   )
 }
 
