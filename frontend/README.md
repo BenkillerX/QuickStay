@@ -21,3 +21,33 @@ Admin: Is runnong the Platfrom
 Now To Browse Should Be Public
 
 But when users what to save a property, contact agent, book an inseption, apply, make a payment Authentication Becomes Necessary
+
+the Buildig process
+
+
+                    QUICKSTAY
+                       │
+        ┌──────────────┴──────────────┐
+        │                             │
+     BACKEND                       FRONTEND
+        │                             │
+        ▼                             ▼
+   1. Auth  ──────────────────────> Auth UI
+        │
+        ▼
+   2. Properties ─────────────────> Explore
+        │
+        ▼
+   3. Property Details ───────────> Details Page
+        │
+        ▼
+   4. Bookings ───────────────────> Booking UI
+        │
+        ▼
+   5. User Dashboard ─────────────> Dashboard
+        │
+        ▼
+   6. Host Properties ────────────> Host Dashboard
+        │
+        ▼
+   7. Payments ───────────────────> Checkout

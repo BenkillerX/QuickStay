@@ -1,60 +1,163 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { FiMenu, FiX } from "react-icons/fi";
 
 const Navbar = () => {
-    const [isOpen, setIsOpen] = useState<boolean>(false);
-    if (isOpen) {
-        alert("Side Bar Open")
-    }
-    const Navlinks = [
+  const [isOpen, setIsOpen] = useState(false);
+
+  const navLinks = [
     { name: "Home", path: "/" },
-  { name: "Explore", path: "/explore" },
-  { name: "How It Works", path: "/HowItWorks" },
-]
+    { name: "Explore", path: "/explore" },
+    { name: "How It Works", path: "/how-it-works" },
+  ];
+
+  const closeMenu = () => {
+    setIsOpen(false);
+  };
+
   return (
-    <header className='w-full border-b border-gray-200 sticky top-0 z-10 bg-white'>
-         <nav>
-            {/* Mobile Screen */}
-            <div className='px-4 py-2 flex items-center justify-between md:hidden'>
-                <h1>QucikStay</h1>
-                {/* Hamburger */}
-                <button onClick={()=>setIsOpen(!isOpen)} className='flex flex-col gap-1' >
-                    <span className='w-6 h-0.5 bg-black '></span>
-                    <span className='w-6 h-0.5 bg-black'></span>
-                    <span className='w-6 h-0.5 bg-black'></span>
-                </button>
-            </div>
+    <header className="w-full border-b border-gray-200 sticky top-0 z-50 bg-white">
+      <nav>
+        {/* MOBILE NAVBAR */}
+        <div className="px-4 py-3 flex items-center justify-between md:hidden">
+          <Link to="/" onClick={closeMenu}>
+            <h1 className="text-xl font-bold">
+              Quick<span className="text-orange-500">Stay</span>
+            </h1>
+          </Link>
 
-
-            {/* Tablet Above */}
-            <div className='hidden md:flex items-center px-16 py-4 justify-between  w-full m-auto'>
-            {/* Logo Section */}
-        <Link to="/">
-        <div>
-            <img src="" alt="" />
-        <h1 className='text-lg font-bold'>Quick<span className='text-orange-500'>Stay</span></h1>
+          {/* Hamburger / Close Icon */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="text-2xl text-gray-700"
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+          >
+            {isOpen ? <FiX /> : <FiMenu />}
+          </button>
         </div>
-        </Link>
-        <ul className='flex gap-8'>
-           {Navlinks.map((link)=>(
-            <li key={link.name}>
-                <Link to={link.path}
-                className=' className="text-gray-700 font-medium hover:text-amber-700 transition duration-300"'>
-                    {link.name}
+
+        {/* MOBILE SIDEBAR */}
+        <div
+          className={`fixed top-0 right-0 h-screen w-72 bg-white shadow-xl z-50 transform transition-transform duration-300 md:hidden ${
+            isOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          {/* Sidebar Header */}
+          <div className="flex items-center justify-between px-5 py-4 border-b">
+            <h2 className="text-xl font-bold">
+              Quick<span className="text-orange-500">Stay</span>
+            </h2>
+
+            <button
+              onClick={closeMenu}
+              className="text-2xl text-gray-700"
+              aria-label="Close menu"
+            >
+              <FiX />
+            </button>
+          </div>
+
+          {/* Sidebar Links */}
+          <ul className="flex flex-col px-5 py-6 gap-5">
+            {navLinks.map((link) => (
+              <li key={link.name}>
+                <Link
+                  to={link.path}
+                  onClick={closeMenu}
+                  className="block text-gray-700 font-medium hover:text-orange-500 transition duration-300"
+                >
+                  {link.name}
                 </Link>
-            </li>
-           ))}
-        </ul>
-        <div className='flex gap-4 items-center'>
-            <Link to="/login" className='px-4 py-2 bg-orange-500 rounded-lg text-white'>Login</Link>
-            <Link to="/register" className="px-4 py-2 border-2 border-orange-500 hover:bg-orange-500 hover:text-white text-sm  rounded-lg transition">Sign In</Link>
-            <Link to="/" className='bg-orange-500 px-4 py-2 rounded-lg text-white'>List Property</Link>
-        </div>
-    </div>
-    </nav>
-    </header>
-   
-  )
-}
+              </li>
+            ))}
+          </ul>
 
-export default Navbar
+          {/* Sidebar Buttons */}
+          <div className="px-5 flex flex-col gap-3">
+            <Link
+              to="/login"
+              onClick={closeMenu}
+              className="w-full text-center px-4 py-2 bg-orange-500 rounded-lg text-white"
+            >
+              Login
+            </Link>
+
+            <Link
+              to="/register"
+              onClick={closeMenu}
+              className="w-full text-center px-4 py-2 border-2 border-orange-500 rounded-lg text-orange-500 hover:bg-orange-500 hover:text-white transition"
+            >
+              Sign Up
+            </Link>
+
+            <Link
+              to="/list-property"
+              onClick={closeMenu}
+              className="w-full text-center bg-orange-500 px-4 py-2 rounded-lg text-white"
+            >
+              List Property
+            </Link>
+          </div>
+        </div>
+
+        {/* OVERLAY */}
+        {isOpen && (
+          <div
+            onClick={closeMenu}
+            className="fixed inset-0 bg-black/40 z-40 md:hidden"
+          />
+        )}
+
+        {/* DESKTOP / TABLET NAVBAR */}
+        <div className="hidden md:flex items-center px-8 lg:px-28 py-2 justify-between w-full">
+          {/* Logo */}
+          <Link to="/">
+            <h1 className="text-xl font-bold">
+              Quick<span className="text-orange-500">Stay</span>
+            </h1>
+          </Link>
+
+          {/* Navigation */}
+          <ul className="flex gap-6 lg:gap-8">
+            {navLinks.map((link) => (
+              <li key={link.name}>
+                <Link
+                  to={link.path}
+                  className="text-gray-700 font-medium hover:text-orange-500 transition duration-300"
+                >
+                  {link.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          {/* Actions */}
+          <div className="flex gap-3 items-center">
+            <Link
+              to="/login"
+              className="px-4 py-2 bg-orange-500 rounded-lg text-white hover:bg-orange-600 transition"
+            >
+              Login
+            </Link>
+
+            <Link
+              to="/register"
+              className="px-4 py-2 border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white text-sm rounded-lg transition"
+            >
+              Sign Up
+            </Link>
+
+            <Link
+              to="/list-property"
+              className="bg-orange-500 px-4 py-2 rounded-lg text-white hover:bg-orange-600 transition"
+            >
+              List Property
+            </Link>
+          </div>
+        </div>
+      </nav>
+    </header>
+  );
+};
+
+export default Navbar;
