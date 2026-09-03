@@ -53,3 +53,23 @@ quickstay-backend/
 ├── .gitignore
 ├── package.json
 └── README.md
+
+1. Register
+      ↓
+2. Login
+      ↓
+3. Generate JWT
+      ↓
+4. Authenticate JWT middleware
+      ↓
+5. GET /me
+      ↓
+6. Test the entire authentication flow
+      ↓
+7. Authorization / roles
+      ↓
+8. Logout strategy
+      ↓
+9. Email verification
+      ↓
+10. Forgot/reset password

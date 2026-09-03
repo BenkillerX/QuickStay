@@ -25,6 +25,20 @@ export const registerValidator= [
 
     body("role")
     .optional()
-    .isIn(["tenant", "propertyOwner", "skillProvider"])
+    .isIn(["tenant", "propertyOwner", "serviceProvider"])
     .withMessage("Invalid role.")
+];
+export const loginValidator = [
+    body("email")
+    .trim()
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail(),
+    
+     body("password")
+        .notEmpty()
+        .withMessage("Password is required.")
+        .isLength({ min: 8 })
+        .withMessage("Password must be at least 8 characters long."),
+
 ]
