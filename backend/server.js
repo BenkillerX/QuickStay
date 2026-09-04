@@ -11,7 +11,11 @@ const PORT = process.env.PORT
 app.use(express.json())
 app.use(cors())
 app.use('/api/auth', authRoutes)
-
+app.get('/', (_, res)=>{
+    return res.json({
+        message:"Hello World and first live deployed backend"
+    })
+})
 
 connectDb().then(()=>{
     app.listen(PORT,()=>{
