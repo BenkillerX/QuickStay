@@ -135,21 +135,21 @@ const Navbar = () => {
           <div className="flex gap-3 items-center">
             <Link
               to="/login"
-              className="px-4 py-2 bg-orange-500 rounded-lg text-white hover:bg-orange-600 transition"
+              className="px-4 py-1.5 bg-orange-500 rounded-lg text-white hover:bg-orange-600 transition"
             >
               Login
             </Link>
 
             <Link
               to="/register"
-              className="px-4 py-2 border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white text-sm rounded-lg transition"
+              className="px-4 py-1.5 border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white text-sm rounded-lg transition"
             >
               Sign Up
             </Link>
 
             <Link
               to="/list-property"
-              className="bg-orange-500 px-4 py-2 rounded-lg text-white hover:bg-orange-600 transition"
+              className="bg-orange-500 px-4 py-1.5 rounded-xl text-white hover:bg-orange-600 transition"
             >
               List Property
             </Link>

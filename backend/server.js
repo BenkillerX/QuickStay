@@ -13,7 +13,7 @@ app.use(cors())
 app.use('/api/auth', authRoutes)
 app.get('/', (_, res)=>{
     return res.json({
-        message:"Hello World and first live deployed backend"
+        message:"Hello World and first live deployed backend and live"
     })
 })
 
