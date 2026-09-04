@@ -56,18 +56,6 @@ export async function Login(req, res) {
             message:"Invalid Password"
         })
     }
-    
-    const refreshToken = generateRefreshToken(existingUser);
-    const refreshTokenHash = await bcrypt.hash(refreshToken, 12);
-    const expiresAt = new Date(
-    Date.now() + 7 * 24 * 60 * 60 * 1000
-);
-    await Session.create({
-    user: user._id,
-    refreshTokenHash,
-    expiresAt:expiresAt
-});
-
 
     return res.status(201).json({
         message:"Login Successful",
@@ -101,8 +89,63 @@ export async function getCurrentUser(req, res) {
         })
     }
 }
-export function testOwner(req, res) {
-    return res.status(200).json({
-        message:"You were an admin or property owner"
-    })
-}
+
+export const updateCurrentUser = async (req, res) => {
+    try {
+        const { firstname, lastname, email } = req.body;
+
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        // Update only fields that were provided
+        if (firstname !== undefined) {
+            user.firstname = firstname.trim();
+        }
+
+        if (lastname !== undefined) {
+            user.lastname = lastname.trim();
+        }
+
+        if (email !== undefined) {
+            const existingEmail = await User.findOne({
+                email: email.toLowerCase(),
+                _id: { $ne: req.user.id }
+            });
+
+            if (existingEmail) {
+                return res.status(400).json({
+                    message: "Email already in use"
+                });
+            }
+
+            user.email = email.toLowerCase().trim();
+        }
+
+        await user.save();
+
+        return res.status(200).json({
+            message: "Profile updated successfully",
+            user: {
+                id: user._id,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                email: user.email,
+                role: user.role,
+                isEmailVerified: user.isEmailVerified,
+                onboardingCompleted: user.onboardingCompleted
+            }
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            message: "An error occurred on the server"
+        });
+    }
+};
