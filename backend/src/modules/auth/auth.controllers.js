@@ -4,39 +4,148 @@ import User from "../models/Users.js";
 import bcrypt from "bcrypt"
 
 
-export async function RegisterUser(req, res) {
+export async function registerTenant(req, res) {
     try {
-        const {firstname, lastname, email, password} = req.body;
-    const exisitngEmail = await User.findOne({email})
+        const {
+            firstname,
+            lastname,
+            email,
+            password
+        } = req.body;
 
-    if (exisitngEmail) {
-        return res.status(400).json({
-            message:"Email already in Use"
-        })
-    }
-    const saltRounds = 12;
-    const hashPassword = await bcrypt.hash(password, saltRounds);
+        // Check if email already exists
+        const existingUser = await User.findOne({ email });
 
-    const newUser = new User({
-        firstname,
-        lastname,
-        email,
-        password:hashPassword,
-        role: "tenant"
-    })
-    
-    await newUser.save();
-    return res.status(201).json({
-        message:"User Created Successfully",
-        token:generateToken(newUser)
-    })
+        if (existingUser) {
+            return res.status(400).json({
+                message: "An account with this email already exists."
+            });
+        }
+
+        // Hash password
+        const saltRounds = 12;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        // Create tenant
+        const newTenant = new User({
+            firstname,
+            lastname,
+            email,
+            password: hashedPassword,
+            role: "tenant"
+        });
+
+        await newTenant.save();
+
+        return res.status(201).json({
+            message: "Tenant account created successfully.",
+            token: generateToken(newTenant)
+        });
+
     } catch (error) {
-        return res.status(500).json({
-            message:"An error occured on the server"
-        })
-    }
+        console.error("Tenant registration error:", error);
 
+        return res.status(500).json({
+            message: "An error occurred while creating your account."
+        });
+    }
 }
+
+export async function registerPropertyOwner(req, res) {
+    try {
+        const {
+            firstname,
+            lastname,
+            email,
+            password
+        } = req.body;
+
+        // Check if email already exists
+        const existingUser = await User.findOne({ email });
+
+        if (existingUser) {
+            return res.status(400).json({
+                message: "An account with this email already exists."
+            });
+        }
+
+        // Hash password
+        const saltRounds = 12;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        // Create property owner
+        const newPropertyOwner = new User({
+            firstname,
+            lastname,
+            email,
+            password: hashedPassword,
+            role: "propertyOwner"
+        });
+
+        await newPropertyOwner.save();
+
+        return res.status(201).json({
+            message: "Property owner account created successfully.",
+            token: generateToken(newPropertyOwner)
+        });
+
+    } catch (error) {
+        console.error("Property owner registration error:", error);
+
+        return res.status(500).json({
+            message: "An error occurred while creating your account."
+        });
+    }
+}
+
+export async function registerServiceProvider(req, res) {
+    try {
+        const {
+            firstname,
+            lastname,
+            email,
+            password
+        } = req.body;
+
+        // Check if email already exists
+        const existingUser = await User.findOne({ email });
+
+        if (existingUser) {
+            return res.status(400).json({
+                message: "An account with this email already exists."
+            });
+        }
+
+        // Hash password
+        const saltRounds = 12;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        // Create service provider
+        const newServiceProvider = new User({
+            firstname,
+            lastname,
+            email,
+            password: hashedPassword,
+            role: "serviceProvider"
+        });
+
+        await newServiceProvider.save();
+
+        return res.status(201).json({
+            message: "Service provider account created successfully.",
+            token: generateToken(newServiceProvider)
+        });
+
+    } catch (error) {
+        console.error("Service provider registration error:", error);
+
+        return res.status(500).json({
+            message: "An error occurred while creating your account."
+        });
+    }
+}
+
+
 export async function Login(req, res) {
     try {
         
@@ -69,6 +178,8 @@ export async function Login(req, res) {
         })
     }
 }
+
+
 
 export async function getCurrentUser(req, res) {
     try {

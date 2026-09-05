@@ -15,6 +15,7 @@ const Navbar = () => {
     setIsOpen(false);
   };
 
+
   return (
     <header className="w-full border-b border-gray-200 sticky top-0 z-50 bg-white">
       <nav>
@@ -22,7 +23,7 @@ const Navbar = () => {
         <div className="px-4 py-3 flex items-center justify-between md:hidden">
           <Link to="/" onClick={closeMenu}>
             <h1 className="text-xl font-bold">
-              Quick<span className="text-orange-500">Stay</span>
+              Green<span className="text-green-500">Spring</span>Home
             </h1>
           </Link>
 
@@ -113,7 +114,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/">
             <h1 className="text-xl font-bold">
-              Quick<span className="text-orange-500">Stay</span>
+              Green<span className="text-green-500">Spring</span>Homes
             </h1>
           </Link>
 

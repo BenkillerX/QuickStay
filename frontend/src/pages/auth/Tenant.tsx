@@ -1,51 +1,75 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import api from "../../services/api";
-import axios from "axios";
+import { useState } from "react"
+import { Link } from "react-router-dom"
+import api from "../../services/api"
+import axios from "axios"
 
-const Login = () => {
-  
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const [error, setError] = useState<string | null>(null)
-    async  function login(e:React.FormEvent<HTMLFormElement>) {
-      e.preventDefault();
-      try {
-        const response = await api.post("/api/auth/login", {
+const Tenant = () => {
+  type BackendError = {
+  msg: string;
+};
+
+type ErrorResponse = {
+  message?: string;
+  errors?: BackendError[];
+};
+
+    const [firstname, setFirstname] = useState("")
+  const [lastname, setLastname] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+const [errors, setErrors] = useState<string[]>([]);
+  async function register(e:React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    try {
+      const response = await api.post("/api/auth/register/tenant", {
+       firstname,
+      lastname,
       email,
       password,
     });
     const data = response.data;
     console.log(data);
-    
-      } catch (error) {
-         if (axios.isAxiosError(error)) {
-            setError(
-              error.response?.data?.message || "Something Went Wrong."
-            )
+    }catch (error) {
+  if (axios.isAxiosError<ErrorResponse>(error)) {
+    const backendErrors = error.response?.data?.errors;
+
+    if (backendErrors) {
+      setErrors(backendErrors.map((error) => error.msg));
+    } else {
+      setErrors([
+        error.response?.data?.message || "Something went wrong.",
+      ]);
     }
-    }
-    }
+  }
+}
+}
+
   return (
     <section className="min-h-screen w-full flex flex-col items-center justify-center px-4 py-8">
       {/* Heading */}
       <div className="text-center mb-8">
         <h1 className="text-3xl sm:text-4xl font-semibold text-gray-900">
-          Welcome Back
+          Create Your Account
         </h1>
 
         <p className="text-base sm:text-lg text-gray-500 mt-2">
-          Log in to your account
+         Sign Up to get started
         </p>
       </div>
 
-      {/* Login Card */}
+      {/* Signup Card */}
       <div className="w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-sm p-5 sm:p-8">
-            {error && (
-      <p className="text-sm mb-4 text-red-500 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+        {errors.length > 0 && (
+  <div className="mb-5 rounded-lg border border-red-200 bg-red-50 p-4">
+    {errors.map((error, index) => (
+      <p key={index} className="text-sm text-red-600">
         {error}
       </p>
-    )}
+    ))}
+  </div>
+)}
+
+
         {/* Google Button */}
         <button
           type="button"
@@ -88,7 +112,43 @@ const Login = () => {
         </div>
 
         {/* Form */}
-        <form className="space-y-5" onSubmit={login}>
+        <form className="space-y-5" onSubmit={register}>
+          {/* Firstname */}
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="firstname"
+              className="text-sm font-medium text-gray-700"
+            >
+              Firstname
+            </label>
+
+            <input
+              id="firstname"
+              type="text"
+              value={firstname}
+              onChange={(e)=>setFirstname(e.target.value)}
+              placeholder="Albert.."
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 placeholder:text-gray-400"
+            />
+          </div>
+          {/* Lastname */}
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="lastname"
+              className="text-sm font-medium text-gray-700"
+            >
+              Lastname
+            </label>
+
+            <input
+              id="lastname"
+              type="text"
+              value={lastname}
+              onChange={(e)=>setLastname(e.target.value)}
+              placeholder="Eistien..."
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 placeholder:text-gray-400"
+            />
+          </div>
           {/* Email */}
           <div className="flex flex-col gap-2">
             <label
@@ -101,9 +161,9 @@ const Login = () => {
             <input
               id="email"
               type="email"
-              placeholder="you@gmail.com"
               value={email}
               onChange={(e)=>setEmail(e.target.value)}
+              placeholder="you@gmail.com"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 placeholder:text-gray-400"
             />
           </div>
@@ -129,30 +189,30 @@ const Login = () => {
             <input
               id="password"
               type="password"
-              placeholder="Enter your password"
               value={password}
               onChange={(e)=>setPassword(e.target.value)}
+              placeholder="Enter your password"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 placeholder:text-gray-400"
             />
           </div>
 
-          {/* Login Button */}
+          {/* Sign Up Button */}
           <button
             type="submit"
             className="w-full py-3.5 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-400 active:bg-gray-950 transition-colors"
           >
-            Log in
+            Sign Up
           </button>
         </form>
 
         {/* Register */}
         <p className="text-center text-sm text-gray-500 mt-6">
-          Don't have an account?{" "}
+          Already have an account?{" "}
           <Link to="/register"
             type="button"
             className="font-medium text-orange-500 hover:underline"
           >
-            Create One
+            Log in
           </Link>
         </p>
       </div>
@@ -160,4 +220,4 @@ const Login = () => {
   )
 }
 
-export default Login;
+export default Tenant

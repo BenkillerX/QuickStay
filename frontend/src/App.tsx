@@ -6,6 +6,9 @@ import HowItWorks from "./pages/public/HowItWorks"
 import PropertyDetails from "./pages/public/PropertyDetails"
 import Login from "./pages/auth/Login"
 import Register from "./pages/auth/Register"
+import Tenant from "./pages/auth/Tenant"
+import ServiceProvider from "./pages/auth/ServiceProvider"
+import PropertyOwner from "./pages/auth/PropertyOwner"
 
 const App = () => {
   return (
@@ -20,6 +23,9 @@ const App = () => {
         </Route>
         <Route path="/login" element={<Login/>}/>
          <Route path="/register" element={<Register/>}/>
+         <Route path="/register/tenant" element={<Tenant/>}/>
+         <Route path="/register/service-provider" element={<ServiceProvider/>}/>
+         <Route path="/register/property-owner" element={<PropertyOwner/>}/>
       </Routes>
     </>
   )
