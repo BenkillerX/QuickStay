@@ -4,6 +4,8 @@ import api from "../../services/api"
 import axios from "axios"
 
 const Tenant = () => {
+
+  
   type BackendError = {
   msg: string;
 };
@@ -199,7 +201,7 @@ const [errors, setErrors] = useState<string[]>([]);
           {/* Sign Up Button */}
           <button
             type="submit"
-            className="w-full py-3.5 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-400 active:bg-gray-950 transition-colors"
+            className="w-full py-3.5 bg-green-500 text-white rounded-lg font-medium hover:bg-green-400 active:bg-gray-950 transition-colors"
           >
             Sign Up
           </button>
@@ -210,7 +212,7 @@ const [errors, setErrors] = useState<string[]>([]);
           Already have an account?{" "}
           <Link to="/register"
             type="button"
-            className="font-medium text-orange-500 hover:underline"
+            className="font-medium text-green-500 hover:underline"
           >
             Log in
           </Link>

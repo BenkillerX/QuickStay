@@ -1,31 +1,56 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import api from "../../services/api";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../../context/useAuth";
 
 const Login = () => {
-  
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const [error, setError] = useState<string | null>(null)
-    async  function login(e:React.FormEvent<HTMLFormElement>) {
-      e.preventDefault();
-      try {
-        const response = await api.post("/api/auth/login", {
-      email,
-      password,
-    });
-    const data = response.data;
-    console.log(data);
-    
-      } catch (error) {
-         if (axios.isAxiosError(error)) {
-            setError(
-              error.response?.data?.message || "Something Went Wrong."
-            )
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    // Remove previous error
+    setError(null);
+
+    // Basic frontend validation
+    if (!email || !password) {
+      setError("Please enter your email and password.");
+      return;
     }
+
+    try {
+      setLoading(true);
+      const user = await login(email, password)
+      if (user.role === "tenant") {
+        navigate("/tenant/");
+      } else if (user.role === "propertyOwner") {
+        navigate("/owner/dashboard");
+      } else if (user.role === "skillProvider") {
+        navigate("/provider/dashboard");
+      } else if (user.role === "admin") {
+        navigate("/admin/dashboard");
+      }
+
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setError(
+          error.response?.data?.message ||
+            "Unable to log in. Please check your credentials."
+        );
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
+    } finally {
+      setLoading(false);
     }
-    }
+  }
+
   return (
     <section className="min-h-screen w-full flex flex-col items-center justify-center px-4 py-8">
       {/* Heading */}
@@ -41,11 +66,31 @@ const Login = () => {
 
       {/* Login Card */}
       <div className="w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-sm p-5 sm:p-8">
-            {error && (
-      <p className="text-sm mb-4 text-red-500 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
-        {error}
-      </p>
-    )}
+
+        {/* Error Message */}
+        {error && (
+          <div
+            role="alert"
+            className="mb-5 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+          >
+            <svg
+              className="mt-0.5 h-5 w-5 shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 9v2m0 4h.01M10.29 3.86l-7.1 12.27A2 2 0 004.92 19h14.16a2 2 0 001.73-2.87l-7.1-12.27a2 2 0 00-3.42 0z"
+              />
+            </svg>
+
+            <p>{error}</p>
+          </div>
+        )}
+
         {/* Google Button */}
         <button
           type="button"
@@ -80,15 +125,14 @@ const Login = () => {
 
         {/* Divider */}
         <div className="flex items-center gap-4 my-6">
-          <div className="h-px flex-1 bg-gray-200"></div>
-
+          <div className="h-px flex-1 bg-gray-200" />
           <span className="text-sm text-gray-400">or</span>
-
-          <div className="h-px flex-1 bg-gray-200"></div>
+          <div className="h-px flex-1 bg-gray-200" />
         </div>
 
         {/* Form */}
-        <form className="space-y-5" onSubmit={login}>
+        <form className="space-y-5" onSubmit={handleLogin}>
+
           {/* Email */}
           <div className="flex flex-col gap-2">
             <label
@@ -103,8 +147,14 @@ const Login = () => {
               type="email"
               placeholder="you@gmail.com"
               value={email}
-              onChange={(e)=>setEmail(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 placeholder:text-gray-400"
+              onChange={(e) => setEmail(e.target.value)}
+              className={`w-full px-4 py-3 border rounded-lg outline-none transition
+                ${
+                  error
+                    ? "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-500/10"
+                    : "border-gray-300 focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
+                }
+                placeholder:text-gray-400`}
             />
           </div>
 
@@ -131,33 +181,40 @@ const Login = () => {
               type="password"
               placeholder="Enter your password"
               value={password}
-              onChange={(e)=>setPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 placeholder:text-gray-400"
+              onChange={(e) => setPassword(e.target.value)}
+              className={`w-full px-4 py-3 border rounded-lg outline-none transition
+                ${
+                  error
+                    ? "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-500/10"
+                    : "border-gray-300 focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
+                }
+                placeholder:text-gray-400`}
             />
           </div>
 
           {/* Login Button */}
           <button
             type="submit"
-            className="w-full py-3.5 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-400 active:bg-gray-950 transition-colors"
+            disabled={loading}
+            className="w-full py-3.5 bg-green-500 text-white rounded-lg font-medium hover:bg-green-400 active:bg-gray-950 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Log in
+            {loading ? "Logging in..." : "Log in"}
           </button>
         </form>
 
         {/* Register */}
         <p className="text-center text-sm text-gray-500 mt-6">
           Don't have an account?{" "}
-          <Link to="/register"
-            type="button"
-            className="font-medium text-orange-500 hover:underline"
+          <Link
+            to="/register"
+            className="font-medium text-green-500 hover:underline"
           >
             Create One
           </Link>
         </p>
       </div>
     </section>
-  )
-}
+  );
+};
 
 export default Login;

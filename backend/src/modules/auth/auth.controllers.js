@@ -86,7 +86,14 @@ export async function registerPropertyOwner(req, res) {
 
         return res.status(201).json({
             message: "Property owner account created successfully.",
-            token: generateToken(newPropertyOwner)
+            token: generateToken(newPropertyOwner),
+        user: {
+        id: newPropertyOwner._id,
+        firstname: newPropertyOwner.firstname,
+        lastname: newPropertyOwner.lastname,
+        email: newPropertyOwner.email,
+        role: newPropertyOwner.role
+    }
         });
 
     } catch (error) {
@@ -166,10 +173,9 @@ export async function Login(req, res) {
         })
     }
 
-    return res.status(201).json({
+    return res.status(200).json({
         message:"Login Successful",
-        token:generateToken(existingUser),
-        accessToken:generateRefreshToken(existingUser)
+        token:generateToken(existingUser)
     })
 
     } catch (error) {
