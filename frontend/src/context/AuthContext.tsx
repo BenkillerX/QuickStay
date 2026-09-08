@@ -11,6 +11,7 @@ export interface User {
 export interface AuthContextType {
     currentUser: User | null;
     login: (email: string, password: string) => Promise<User>;
+    register:(firstname: string, lastname: string, email: string, password: string)=> Promise<User>;
     logout: () => void;
 }
 

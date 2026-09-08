@@ -28,6 +28,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return user;
     };
 
+    const register = async (
+  firstname: string,
+  lastname: string,
+  email: string,
+  password: string
+): Promise<User> => {
+  const response = await api.post("/api/auth/register/tenant", {
+    firstname,
+    lastname,
+    email,
+    password,
+  });
+
+  const token = response.data.token;
+
+  localStorage.setItem("token", token);
+
+  const userResponse = await api.get("/api/auth/me");
+
+  const user = userResponse.data.user;
+
+  setCurrentUser(user);
+
+  return user;
+};
+
+
     const logout = (): void => {
         setCurrentUser(null);
         localStorage.removeItem("token");
@@ -38,6 +65,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             value={{
                 currentUser,
                 login,
+                register,
                 logout,
             }}
         >

@@ -1,51 +1,69 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
-import api from "../../services/api"
+import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
+import { useAuth } from "../../context/useAuth"
 
 const Tenant = () => {
-
-  
-  type BackendError = {
-  msg: string;
-};
-
-type ErrorResponse = {
-  message?: string;
-  errors?: BackendError[];
-};
-
+    const {register} = useAuth()
+    const navigate = useNavigate()
     const [firstname, setFirstname] = useState("")
-  const [lastname, setLastname] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-const [errors, setErrors] = useState<string[]>([]);
-  async function register(e:React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    try {
-      const response = await api.post("/api/auth/register/tenant", {
-       firstname,
+    const [lastname, setLastname] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [errors, setErrors] = useState<string[]>([]);
+    const [loading, setLoading] = useState(false);
+
+async function handleRegister(
+  e: React.FormEvent<HTMLFormElement>
+) {
+  e.preventDefault();
+
+  setErrors([]);
+  setLoading(true);
+
+  try {
+    const user = await register(
+      firstname,
       lastname,
       email,
-      password,
-    });
-    const data = response.data;
-    console.log(data);
-    }catch (error) {
-  if (axios.isAxiosError<ErrorResponse>(error)) {
-    const backendErrors = error.response?.data?.errors;
+      password
+    );
 
-    if (backendErrors) {
-      setErrors(backendErrors.map((error) => error.msg));
+    if (user.role === "tenant") {
+      navigate("/tenant/");
+    } else if (user.role === "propertyOwner") {
+      navigate("/owner/dashboard");
+    } else if (user.role === "skillProvider") {
+      navigate("/provider/dashboard");
+    } else if (user.role === "admin") {
+      navigate("/admin/dashboard");
+    }
+
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const data = error.response?.data;
+
+      if (data?.errors?.length) {
+        setErrors(
+          data.errors.map(
+            (error: { msg: string }) => error.msg
+          )
+        );
+      } else {
+        setErrors([
+          data?.message ||
+            "Unable to create your account. Please try again.",
+        ]);
+      }
     } else {
       setErrors([
-        error.response?.data?.message || "Something went wrong.",
+        "Something went wrong. Please try again.",
       ]);
     }
+  } finally {
+    setLoading(false);
   }
 }
-}
-
   return (
     <section className="min-h-screen w-full flex flex-col items-center justify-center px-4 py-8">
       {/* Heading */}
@@ -114,7 +132,7 @@ const [errors, setErrors] = useState<string[]>([]);
         </div>
 
         {/* Form */}
-        <form className="space-y-5" onSubmit={register}>
+        <form className="space-y-5" onSubmit={handleRegister}>
           {/* Firstname */}
           <div className="flex flex-col gap-2">
             <label
@@ -203,7 +221,7 @@ const [errors, setErrors] = useState<string[]>([]);
             type="submit"
             className="w-full py-3.5 bg-green-500 text-white rounded-lg font-medium hover:bg-green-400 active:bg-gray-950 transition-colors"
           >
-            Sign Up
+          {loading ? "Creating account..." : "Sign Up"}
           </button>
         </form>
 
