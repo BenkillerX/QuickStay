@@ -22,7 +22,7 @@ const ServiceProvider = () => {
     async function register(e:React.FormEvent<HTMLFormElement>) {
       e.preventDefault()
       try {
-        const response = await api.post("/api/auth/register/tenant", {
+        const response = await api.post("/api/auth/register/service-provider", {
          firstname,
         lastname,
         email,
