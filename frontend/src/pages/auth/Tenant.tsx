@@ -75,6 +75,9 @@ async function handleRegister(
         <p className="text-base sm:text-lg text-gray-500 mt-2">
          Sign Up to get started
         </p>
+        <Link to="/">
+          Back
+        </Link>
       </div>
 
       {/* Signup Card */}
