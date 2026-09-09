@@ -9,9 +9,9 @@ const TenantSidebar = () => {
 navigate("/login")
   } 
   return (
-    <div>TenantSidebar
+    <aside>TenantSidebar
       <button onClick={handleLogout} className="px-4 py-2 mt-2 bg-green-500 ">Logout</button>
-    </div>
+    </aside>
   )
 }
 

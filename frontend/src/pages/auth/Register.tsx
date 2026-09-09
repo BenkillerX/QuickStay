@@ -7,11 +7,11 @@ const Register = () => {
         {/* Heading */}
         <div className="text-center mb-10">
           <h1 className="text-3xl sm:text-4xl font-semibold text-gray-900">
-            Join QuickStay
+            Join Green<span className="text-green-500">SpringHome</span>.
           </h1>
 
           <p className="mt-3 text-gray-500 text-base sm:text-lg">
-            What would you like to use QuickStay for?
+            What would you like to use Green<span className="text-green-500">SpringHome</span> for?
           </p>
         </div>
 

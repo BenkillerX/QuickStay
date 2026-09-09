@@ -30,11 +30,11 @@ const Login = () => {
       if (user.role === "tenant") {
         navigate("/tenant/");
       } else if (user.role === "propertyOwner") {
-        navigate("/owner/dashboard");
-      } else if (user.role === "skillProvider") {
-        navigate("/provider/dashboard");
+        navigate("/owner/");
+      } else if (user.role === "serviceProvider") {
+        navigate("/provider/");
       } else if (user.role === "admin") {
-        navigate("/admin/dashboard");
+        navigate("/admin/");
       }
 
     } catch (error) {

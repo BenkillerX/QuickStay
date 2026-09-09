@@ -1,10 +1,12 @@
 import { useState } from "react";
-import api from "../../services/api";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
 
 const PropertyOwner = () => {
-
+  const {registerOwner} = useAuth()
+  
+    const navigate = useNavigate()
    type BackendError = {
       msg: string;
     };
@@ -19,17 +21,27 @@ const PropertyOwner = () => {
       const [email, setEmail] = useState("")
       const [password, setPassword] = useState("")
     const [errors, setErrors] = useState<string[]>([]);
-      async function register(e:React.FormEvent<HTMLFormElement>) {
+
+    const [loading, setLoading] = useState<boolean>(false)
+      async function hundleRegister(e:React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         try {
-          const response = await api.post("/api/auth/register/property-owner", {
-           firstname,
-          lastname,
-          email,
-          password,
-        });
-        const data = response.data;
-        console.log(data);
+          setLoading(true)
+         const user = await registerOwner(
+            firstname,
+            lastname,
+            email,
+            password
+         )
+         if (user.role === "tenant") {
+      navigate("/tenant/");
+    } else if (user.role === "propertyOwner") {
+      navigate("/owner/");
+    } else if (user.role === "serviceProvider") {
+      navigate("/provider/");
+    } else if (user.role === "admin") {
+      navigate("/admin/");
+    }
         setFirstname("")
         setLastname("")
         setEmail("")
@@ -46,41 +58,58 @@ const PropertyOwner = () => {
           ]);
         }
       }
+    }finally{
+      setLoading(false)
     }
     }
 
   return (
-    <section className="min-h-screen w-full flex flex-col items-center justify-center px-4 py-8">
-      {/* Heading */}
-      <div className="text-center mb-8">
-        <h1 className="text-3xl sm:text-4xl font-semibold text-gray-900">
-          Create Your Account
-        </h1>
+    <section className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+  <div className="w-full max-w-6xl bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+    <div className="grid lg:grid-cols-2">
 
-        <p className="text-base sm:text-lg text-gray-500 mt-2">
-         Sign Up to get started
-        </p>
-      </div>
+      {/* LEFT — FORM */}
+      <div className="px-6 py-8 sm:px-10 lg:px-14 lg:py-12">
 
-      {/* Signup Card */}
-      <div className="w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-sm p-5 sm:p-8">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="inline-flex items-center rounded-full bg-green-50 px-3 py-1 text-sm font-medium text-green-600 mb-4">
+            Property Owner
+          </div>
+
+          <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900">
+            Create your owner account
+          </h1>
+
+          <p className="mt-2 text-sm sm:text-base text-gray-500">
+            Join QuickStay and start managing your properties with ease.
+          </p>
+        </div>
+
+        {/* Errors */}
         {errors.length > 0 && (
-  <div className="mb-5 rounded-lg border border-red-200 bg-red-50 p-4">
-    {errors.map((error, index) => (
-      <p key={index} className="text-sm text-red-600">
-        {error}
-      </p>
-    ))}
-  </div>
-)}
+          <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4">
+            <div className="flex gap-3">
+              <div className="mt-0.5 text-red-500">
+                ⚠
+              </div>
 
+              <div className="space-y-1">
+                {errors.map((error, index) => (
+                  <p key={index} className="text-sm text-red-600">
+                    {error}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
-        {/* Google Button */}
+        {/* Google */}
         <button
           type="button"
-          className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+          className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition"
         >
-          {/* Google Logo */}
           <svg
             className="w-5 h-5"
             viewBox="0 0 24 24"
@@ -109,119 +138,205 @@ const PropertyOwner = () => {
 
         {/* Divider */}
         <div className="flex items-center gap-4 my-6">
-          <div className="h-px flex-1 bg-gray-200"></div>
-
-          <span className="text-sm text-gray-400">or</span>
-
-          <div className="h-px flex-1 bg-gray-200"></div>
+          <div className="h-px flex-1 bg-gray-200" />
+          <span className="text-xs uppercase tracking-wider text-gray-400">
+            or continue with email
+          </span>
+          <div className="h-px flex-1 bg-gray-200" />
         </div>
 
         {/* Form */}
-        <form className="space-y-5" onSubmit={register}>
-          {/* Firstname */}
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="firstname"
-              className="text-sm font-medium text-gray-700"
-            >
-              Firstname
-            </label>
+        <form className="space-y-5" onSubmit={hundleRegister}>
 
-            <input
-              id="firstname"
-              type="text"
-              value={firstname}
-              onChange={(e)=>setFirstname(e.target.value)}
-              placeholder="Albert.."
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 placeholder:text-gray-400"
-            />
-          </div>
-          {/* Lastname */}
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="lastname"
-              className="text-sm font-medium text-gray-700"
-            >
-              Lastname
-            </label>
+          {/* Name */}
+          <div className="grid sm:grid-cols-2 gap-4">
 
-            <input
-              id="lastname"
-              type="text"
-              value={lastname}
-              onChange={(e)=>setLastname(e.target.value)}
-              placeholder="Eistien..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 placeholder:text-gray-400"
-            />
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="firstname"
+                className="text-sm font-medium text-gray-700"
+              >
+                First name
+              </label>
+
+              <input
+                id="firstname"
+                type="text"
+                value={firstname}
+                onChange={(e) => setFirstname(e.target.value)}
+                placeholder="Albert"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl outline-none transition focus:border-green-500 focus:ring-4 focus:ring-green-500/10 placeholder:text-gray-400"
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="lastname"
+                className="text-sm font-medium text-gray-700"
+              >
+                Last name
+              </label>
+
+              <input
+                id="lastname"
+                type="text"
+                value={lastname}
+                onChange={(e) => setLastname(e.target.value)}
+                placeholder="Eistien"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl outline-none transition focus:border-green-500 focus:ring-4 focus:ring-green-500/10 placeholder:text-gray-400"
+              />
+            </div>
+
           </div>
+
           {/* Email */}
           <div className="flex flex-col gap-2">
             <label
               htmlFor="email"
               className="text-sm font-medium text-gray-700"
             >
-              Email
+              Email address
             </label>
 
             <input
               id="email"
               type="email"
               value={email}
-              onChange={(e)=>setEmail(e.target.value)}
-              placeholder="you@gmail.com"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 placeholder:text-gray-400"
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl outline-none transition focus:border-green-500 focus:ring-4 focus:ring-green-500/10 placeholder:text-gray-400"
             />
           </div>
 
           {/* Password */}
           <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <label
-                htmlFor="password"
-                className="text-sm font-medium text-gray-700"
-              >
-                Password
-              </label>
-
-              <button
-                type="button"
-                className="text-sm font-medium text-gray-700 hover:text-gray-900"
-              >
-                Forgot password?
-              </button>
-            </div>
+            <label
+              htmlFor="password"
+              className="text-sm font-medium text-gray-700"
+            >
+              Password
+            </label>
 
             <input
               id="password"
               type="password"
               value={password}
-              onChange={(e)=>setPassword(e.target.value)}
-              placeholder="Enter your password"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 placeholder:text-gray-400"
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Create a strong password"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl outline-none transition focus:border-green-500 focus:ring-4 focus:ring-green-500/10 placeholder:text-gray-400"
             />
+
+            <p className="text-xs text-gray-400">
+              Use at least 8 characters for better security.
+            </p>
           </div>
 
-          {/* Sign Up Button */}
+          {/* Submit */}
           <button
             type="submit"
-            className="w-full py-3.5 bg-green-500 text-white rounded-lg font-medium hover:bg-green-400 active:bg-gray-950 transition-colors"
+            disabled={loading}
+            className="w-full py-3.5 bg-green-500 text-white rounded-xl font-medium hover:bg-green-600 active:scale-[0.99] transition-all shadow-sm"
           >
-            Sign Up
+            {loading ? "Creating account..." : "Create Property Owner Account"}
           </button>
         </form>
 
-        {/* Register */}
-        <p className="text-center text-sm text-gray-500 mt-6">
+        {/* Login */}
+        <p className="text-center text-sm text-gray-500 mt-7">
           Already have an account?{" "}
-          <Link to="/login"
-            type="button"
-            className="font-medium text-green-500 hover:underline"
+          <Link
+            to="/login"
+            className="font-semibold text-green-600 hover:text-green-700 hover:underline"
           >
             Log in
           </Link>
         </p>
       </div>
-    </section>
+
+
+      {/* RIGHT — PROPERTY OWNER INTRO */}
+      <div className="relative hidden lg:flex min-h-175 bg-gray-900 overflow-hidden">
+
+        {/* Background image */}
+        <img
+          src="/images/Quick5.jpg"
+          alt="Beautiful property"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/50" />
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col justify-between p-10 xl:p-14 text-white">
+
+          {/* Top */}
+          <div>
+            <div className="inline-flex items-center rounded-full bg-white/15 backdrop-blur-md border border-white/20 px-4 py-2 text-sm">
+              🏠 Built for property owners
+            </div>
+          </div>
+
+          {/* Main content */}
+          <div className="max-w-md">
+
+            <h2 className="text-4xl xl:text-5xl font-semibold leading-tight">
+              Turn your property into an opportunity.
+            </h2>
+
+            <p className="mt-5 text-white/80 text-base xl:text-lg leading-relaxed">
+              Create your account, set up your property profile, and get
+              access to your QuickStay dashboard where you can manage your
+              listings and connect with tenants.
+            </p>
+
+            {/* Benefits */}
+            <div className="mt-8 space-y-4">
+
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
+                  ✓
+                </div>
+                <span className="text-sm text-white/90">
+                  Manage your properties from one dashboard
+                </span>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
+                  ✓
+                </div>
+                <span className="text-sm text-white/90">
+                  Connect with potential tenants
+                </span>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
+                  ✓
+                </div>
+                <span className="text-sm text-white/90">
+                  Get your own dedicated owner dashboard
+                </span>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Bottom */}
+          <div className="pt-8 border-t border-white/20">
+            <p className="text-sm text-white/60">
+              After creating your account, you'll be guided through the next
+              steps to complete your property owner profile.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
   )
 }
 

@@ -1,5 +1,5 @@
 import { FaArrowRight } from "react-icons/fa6";
-import Quick3 from "../../assets/images/Quick3.jpg"
+import Quick3 from "/images/Quick3.jpg"
 import formatPrice from "../../utils/FormatPrice";
 const VerifiedHomes = () => {
 

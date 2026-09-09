@@ -16,6 +16,10 @@ import TenantMessages from "./pages/tenant/TenantMessages"
 import Insepections from "./pages/tenant/Insepections"
 import Notifications from "./pages/tenant/Notifications"
 import Settings from "./pages/tenant/Settings"
+import OwnerLayout from "./layouts/OwnerLayout"
+import OwnerHome from "./pages/landlord/OwnerHome"
+import ServiceProviderLayout from "./layouts/ServiceProviderLayout"
+import ServiceHome from "./pages/serviceProvider/ServiceHome"
 
 const App = () => {
   return (
@@ -28,6 +32,7 @@ const App = () => {
           <Route path="/How-it-works" element={<HowItWorks/>}/>
           <Route path="/propertydetails/:id"  element={<PropertyDetails/>}/>
         </Route>
+        {/* Tenant Pages Routes */}
         <Route element={<TenantLayout/>}>
           <Route path="/tenant/" element={<TenantHome/>}/>
           <Route path="/tenant/saved-properties" element={<SavedProperties/>}/>
@@ -36,6 +41,14 @@ const App = () => {
           <Route path="/tenant/notifications" element={<Notifications/>}/>
           <Route path="/tenant/settings" element={<Settings/>}/>
         </Route>
+
+        <Route element={<OwnerLayout/>}>
+            <Route path="/owner/" element={<OwnerHome/>}/>
+        </Route>
+      <Route element={<ServiceProviderLayout/>}>
+       <Route path="/provider/" element={<ServiceHome/>}/> 
+      </Route>
+
         <Route path="/login" element={<Login/>}/>
          <Route path="/register" element={<Register/>}/>
          <Route path="/register/tenant" element={<Tenant/>}/>
