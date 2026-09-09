@@ -2,7 +2,7 @@ import { MdVerifiedUser } from "react-icons/md"
 
 const HeroSection = () => {
   return (
-    <section className="relative flex min-h-screen w-full flex-col items-center justify-center bg-[url('./assets/images/QuickStay1.jpg')] bg-cover bg-center">
+    <section className="relative flex min-h-screen w-full flex-col items-center justify-center bg-[url('/images/QuickStay1.jpg')] bg-cover bg-center">
 
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/50"></div>
