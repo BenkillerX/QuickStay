@@ -16,9 +16,11 @@ import {
 const TenantSidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const { logout } = useAuth();
+  const { logout, currentUser } = useAuth();
   const navigate = useNavigate();
-
+  
+    const userInitial = currentUser?.firstname?.charAt(0).toUpperCase() || "?";
+    
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -70,44 +72,57 @@ const TenantSidebar = () => {
       </div>
 
       {/* Profile */}
-      <div
-        className={`
-          p-5
-          border-b border-gray-100
-          ${isCollapsed ? "flex justify-center" : ""}
-        `}
-      >
-        <div
-          className={`
-            flex items-center
-            ${isCollapsed ? "justify-center" : "gap-3"}
-          `}
-        >
-          <img
-            src="/images/Quick4.jpg"
-            alt="User"
-            className="w-11 h-11 rounded-full object-cover shrink-0"
-          />
+     {/* Profile */}
+<div
+  className={`
+    p-5
+    border-b border-gray-100
+    ${isCollapsed ? "flex justify-center" : ""}
+  `}
+>
+  <div
+    className={`
+      flex items-center
+      ${isCollapsed ? "justify-center" : "gap-3"}
+    `}
+  >
+    {/* User Initial */}
+    <div
+      className="
+        w-11 h-11
+        rounded-full
+        bg-green-100
+        text-green-600
+        flex items-center justify-center
+        font-semibold
+        text-lg
+        shrink-0
+      "
+    >
+      {userInitial}
+    </div>
 
-          {!isCollapsed && (
-            <div className="min-w-0">
-              <h2 className="text-sm font-semibold text-gray-800 truncate">
-                Akhere Benedict
-              </h2>
+    {!isCollapsed && (
+      <div className="min-w-0">
+        <h2 className="text-sm font-semibold text-gray-800 truncate">
+          {currentUser?.firstname} {currentUser?.lastname}
+        </h2>
 
-              <p className="text-xs text-gray-500">
-                Renter
-              </p>
-            </div>
-          )}
-
-          {!isCollapsed && (
-            <button className="ml-auto p-1 text-gray-400 hover:text-gray-700">
-              <FiChevronRight />
-            </button>
-          )}
-        </div>
+        <p className="text-xs text-gray-500">
+          {currentUser?.role === "tenant"
+            ? "Tenant"
+            : currentUser?.role}
+        </p>
       </div>
+    )}
+
+    {!isCollapsed && (
+      <button className="ml-auto p-1 text-gray-400 hover:text-gray-700">
+        <FiChevronRight />
+      </button>
+    )}
+  </div>
+</div>
 
       {/* Navigation */}
      <nav className="flex-1 p-4 space-y-2">

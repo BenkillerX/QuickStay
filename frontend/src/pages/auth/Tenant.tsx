@@ -30,11 +30,23 @@ async function handleRegister(
     );
 
     if (user.role === "tenant") {
-      navigate("/tenant/");
+      if (!user.onboardingCompleted) {
+        navigate("/tenant/onboarding");
+      } else {
+        navigate("/tenant/");
+      }
     } else if (user.role === "propertyOwner") {
-      navigate("/owner/");
+      if (!user.onboardingCompleted) {
+        navigate("/owner/onboarding");
+      } else {
+        navigate("/owner/");
+      }
     } else if (user.role === "serviceProvider") {
-      navigate("/provider/");
+      if (!user.onboardingCompleted) {
+        navigate("/provider/onboarding");
+      } else {
+        navigate("/provider/");
+      }
     } else if (user.role === "admin") {
       navigate("/admin/");
     }

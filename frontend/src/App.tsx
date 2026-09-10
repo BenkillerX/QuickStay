@@ -20,6 +20,9 @@ import OwnerLayout from "./layouts/OwnerLayout"
 import OwnerHome from "./pages/landlord/OwnerHome"
 import ServiceProviderLayout from "./layouts/ServiceProviderLayout"
 import ServiceHome from "./pages/serviceProvider/ServiceHome"
+import TenantOnboarding from "./pages/onboarding/TenantOnboarding"
+import ServiceProviderOnboarding from "./pages/onboarding/ServiceProviderOnboarding"
+import PropertyOwnerOnboarding from "./pages/onboarding/PropertyOwnerOnboarding"
 
 const App = () => {
   return (
@@ -46,7 +49,7 @@ const App = () => {
             <Route path="/owner/" element={<OwnerHome/>}/>
         </Route>
       <Route element={<ServiceProviderLayout/>}>
-       <Route path="/provider/" element={<ServiceHome/>}/> 
+       <Route path="/service-provider/" element={<ServiceHome/>}/> 
       </Route>
 
         <Route path="/login" element={<Login/>}/>
@@ -54,6 +57,10 @@ const App = () => {
          <Route path="/register/tenant" element={<Tenant/>}/>
          <Route path="/register/service-provider" element={<ServiceProvider/>}/>
          <Route path="/register/property-owner" element={<PropertyOwner/>}/>
+         <Route path="/tenant/onboarding" element={<TenantOnboarding/>}/>
+         <Route path="/service-provider/onboarding" element={<ServiceProviderOnboarding/>}/>
+         <Route path="/owner/onboarding" element={<PropertyOwnerOnboarding/>}/>
+
       </Routes>
     </>
   )

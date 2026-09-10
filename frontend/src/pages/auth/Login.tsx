@@ -12,45 +12,56 @@ const Login = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+ async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault();
 
-    // Remove previous error
-    setError(null);
+  setError(null);
 
-    // Basic frontend validation
-    if (!email || !password) {
-      setError("Please enter your email and password.");
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const user = await login(email, password)
-      if (user.role === "tenant") {
-        navigate("/tenant/");
-      } else if (user.role === "propertyOwner") {
-        navigate("/owner/");
-      } else if (user.role === "serviceProvider") {
-        navigate("/provider/");
-      } else if (user.role === "admin") {
-        navigate("/admin/");
-      }
-
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        setError(
-          error.response?.data?.message ||
-            "Unable to log in. Please check your credentials."
-        );
-      } else {
-        setError("Something went wrong. Please try again.");
-      }
-    } finally {
-      setLoading(false);
-    }
+  if (!email || !password) {
+    setError("Please enter your email and password.");
+    return;
   }
 
+  try {
+    setLoading(true);
+
+    const user = await login(email, password);
+
+    if (user.role === "tenant") {
+      if (!user.onboardingCompleted) {
+        navigate("/tenant/onboarding");
+      } else {
+        navigate("/tenant/");
+      }
+    } else if (user.role === "propertyOwner") {
+      if (!user.onboardingCompleted) {
+        navigate("/owner/onboarding");
+      } else {
+        navigate("/owner/");
+      }
+    } else if (user.role === "serviceProvider") {
+      if (!user.onboardingCompleted) {
+        navigate("/service-provider/onboarding");
+      } else {
+        navigate("/service-provider/");
+      }
+    } else if (user.role === "admin") {
+      navigate("/admin/");
+    }
+
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      setError(
+        error.response?.data?.message ||
+          "Unable to log in. Please check your credentials."
+      );
+    } else {
+      setError("Something went wrong. Please try again.");
+    }
+  } finally {
+    setLoading(false);
+  }
+}
   return (
     <section className="min-h-screen w-full flex flex-col items-center justify-center px-4 py-8">
       {/* Heading */}
