@@ -73,3 +73,39 @@ quickstay-backend/
 9. Email verification
       ↓
 10. Forgot/reset password
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+I recommend we build it in this order
+
+1. Install Multer + Cloudinary packages
+
+2. Create Cloudinary configuration
+
+3. Create upload middleware
+
+4. Test uploading images
+
+5. Get the Cloudinary URLs
+
+6. Add those URLs to Property.images
+
+7. Connect your React AddProperty form

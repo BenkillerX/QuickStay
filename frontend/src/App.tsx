@@ -23,6 +23,8 @@ import ServiceHome from "./pages/serviceProvider/ServiceHome"
 import TenantOnboarding from "./pages/onboarding/TenantOnboarding"
 import ServiceProviderOnboarding from "./pages/onboarding/ServiceProviderOnboarding"
 import PropertyOwnerOnboarding from "./pages/onboarding/PropertyOwnerOnboarding"
+import OwnerProperties from "./pages/landlord/OwnerProperties"
+import Addproperties from "./pages/landlord/Addproperties"
 
 const App = () => {
   return (
@@ -47,6 +49,11 @@ const App = () => {
 
         <Route element={<OwnerLayout/>}>
             <Route path="/owner/" element={<OwnerHome/>}/>
+            <Route path="/owner/properties" element={<OwnerProperties/>}/>
+            <Route path="/owner/properties/add" element={<Addproperties/>}/>
+            <Route path="/owner/messages" element={<OwnerHome/>}/>
+            <Route path="/owner/notifications" element={<OwnerHome/>}/>
+            <Route path="/owner/settings" element={<OwnerHome/>}/>
         </Route>
       <Route element={<ServiceProviderLayout/>}>
        <Route path="/service-provider/" element={<ServiceHome/>}/> 
