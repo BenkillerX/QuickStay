@@ -84,7 +84,8 @@ const Addproperties = () => {
         setLoading(false);
         return;
       }
-
+console.log("Images state:", images);
+console.log("Number of images:", images.length);
       const formData = new FormData();
 
       formData.append("title", title);
@@ -100,9 +101,15 @@ const Addproperties = () => {
       formData.append("location[area]", area);
       formData.append("location[address]", address);
 
-      images.forEach((image) => {
-        formData.append("images", image);
-      });
+     images.forEach((image) => {
+  formData.append("images", image);
+});
+
+console.log("FormData images:");
+
+for (const [key, value] of formData.entries()) {
+  console.log(key, value);
+}
 
       const response = await api.post("/api/properties/", formData);
 
