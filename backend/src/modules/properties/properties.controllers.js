@@ -61,11 +61,11 @@ export async function addProperty(req, res) {
     });
 
   } catch (error) {
-    console.error("Add property error:", error);
+  console.error("ADD PROPERTY ERROR:", error);
 
-    return res.status(500).json({
-      message: "Unable to add property.",
-      error: error.message,
-    });
-  }
+  return res.status(500).json({
+    message: "Unable to add property.",
+    error: error.message,
+  });
+}
 }

@@ -116,18 +116,21 @@ for (const [key, value] of formData.entries()) {
       console.log("Property created:", response.data);
 
       navigate("/owner/properties");
-    } catch (error: unknown) {
-      console.error("Add property error:", error);
+    }catch (error: unknown) {
+  console.error("Add property error:", error);
 
-      if (axios.isAxiosError(error)) {
-        setError(
-          error.response?.data?.message ||
-            "Unable to add property. Please try again."
-        );
-      } else {
-        setError("Something went wrong. Please try again.");
-      }
-    } finally {
+  if (axios.isAxiosError(error)) {
+    console.log("SERVER RESPONSE:", error.response?.data);
+
+    setError(
+      error.response?.data?.error ||
+      error.response?.data?.message ||
+      "Unable to add property. Please try again."
+    );
+  } else {
+    setError("Something went wrong. Please try again.");
+  }
+} finally {
       setLoading(false);
     }
   };
