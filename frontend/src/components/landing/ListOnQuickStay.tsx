@@ -16,47 +16,86 @@ const ListOnQuickStay = () => {
         },
     ]
   return (
-    <section className='w-full min-h-140 bg-gray-200 pt-15 pb-15 lg:px-28'>
-        {/* Have A Property card*/}
-        <div className=' bg-white flex flex-col gap-8 md:flex-row justify-between items-center px-8 py-8 rounded-2xl mb-10'>
-            <div>
-                <h1 className='text-lg md:text-2xl lg:text-4xl font-medium mb-4'>Have a propery? List it on Quickstay.</h1>
-                <p className='text-md max-w-140 mb-10 text-gray-400'>Verify once, publish professionally and manage reservations, availability and earnings from one dashboard.</p>
-                <Link to=""
-                className='px-4 py-4 bg-orange-500 rounded-md text-white'>
-                    Become a Host
-                </Link>
-            </div>
-            <div className='flex flex-col sm:flex-row gap-4 w-full md:w-1/2'>
-               {stayPeriod.map((period)=>(
-                <div className='px-4 py-4 bg-gray-200 rounded-sm'>
-                    <h1 className='text-lg font-md'>{period.title}</h1>
-                    <p className='text-sm text-gray-400'>{period.des}</p>
-                </div>
-               ))}
-            </div>
-        </div>
-        {/* Stars */}
-        <div className='px-6 md:px-4'>
-            <h1 className='text-2xl font-medium'>Guest reviews</h1>
-            
-            {/* container to wrap all reviews */}
-            <div className=''>
+   <section className="w-full min-h-140 bg-gray-200 px-4 py-10 sm:px-6 md:px-10 lg:px-28 lg:py-15">
 
-            <div className='max-w-100 h-30 border border-gray-400 rounded-2xl px-4 py-2'>
-                <FaStar className='inline-block text-orange-500'/>
-                <FaStar className='inline-block text-orange-500'/>
-                <FaStar className='inline-block text-orange-500'/>
-                <FaStar className='inline-block text-orange-500'/>
-                <FaStar className='inline-block text-orange-500'/>
-               
-                <h1>“Exactly as described — spotless, quiet and the check-in code worked perfectly.”</h1>
-                <p>Samuel Adeleke · Modern 2-Bedroom Apartment</p>
-            </div>
-            </div>
+  {/* Have A Property Card */}
+  <div className="mb-10 flex flex-col gap-8 rounded-2xl bg-white px-5 py-7 sm:px-8 sm:py-8 lg:flex-row lg:items-center lg:justify-between">
+
+    {/* Text */}
+    <div className="w-full lg:w-1/2">
+      <h1 className="mb-4 text-xl font-medium leading-tight sm:text-2xl lg:text-4xl">
+        Have a property? List it on QuickStay.
+      </h1>
+
+      <p className="mb-8 max-w-140 text-sm leading-6 text-gray-400 sm:text-base">
+        Verify once, publish professionally and manage reservations,
+        availability and earnings from one dashboard.
+      </p>
+
+      <Link
+        to=""
+        className="inline-flex rounded-md bg-green-600 px-5 py-3 text-sm font-medium text-white transition hover:bg-green-700 sm:px-6 sm:py-3.5"
+      >
+        Become a Host
+      </Link>
+    </div>
+
+    {/* Stay Period Cards */}
+    <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:w-1/2 lg:grid-cols-3">
+      {stayPeriod.map((period) => (
+        <div
+          key={period.title}
+          className="rounded-xl bg-gray-100 px-4 py-4 transition hover:bg-green-50"
+        >
+          <h1 className="text-base font-medium text-gray-800 sm:text-lg">
+            {period.title}
+          </h1>
+
+          <p className="mt-1 text-sm leading-5 text-gray-400">
+            {period.des}
+          </p>
         </div>
-        
-    </section>
+      ))}
+    </div>
+  </div>
+
+
+  {/* Guest Reviews */}
+  <div className="px-1 sm:px-2">
+
+    <h1 className="text-xl font-medium text-gray-900 sm:text-2xl">
+      Guest reviews
+    </h1>
+
+    {/* Reviews */}
+    <div className="mt-5 flex gap-4 overflow-x-auto pb-3">
+
+      <div className="min-w-70 max-w-sm rounded-2xl border border-gray-300 bg-white px-5 py-4 sm:min-w-87.5">
+
+        {/* Stars */}
+        <div className="mb-3 flex gap-1">
+          <FaStar className="text-green-500" />
+          <FaStar className="text-green-500" />
+          <FaStar className="text-green-500" />
+          <FaStar className="text-green-500" />
+          <FaStar className="text-green-500" />
+        </div>
+
+        <h1 className="text-sm leading-6 text-gray-700 sm:text-base">
+          “Exactly as described — spotless, quiet and the check-in code worked
+          perfectly.”
+        </h1>
+
+        <p className="mt-4 text-xs text-gray-400 sm:text-sm">
+          Samuel Adeleke · Modern 2-Bedroom Apartment
+        </p>
+
+      </div>
+
+    </div>
+  </div>
+
+</section>
   )
 }
 

@@ -10,7 +10,7 @@ const Footer = () => {
         {/* Brand */}
         <div className="sm:col-span-2 lg:col-span-1">
           <h1 className="text-2xl font-bold">
-            Quick<span className="text-orange-500">Stay</span>
+            Green<span className="text-green-500">Spring</span>Homes
           </h1>
 
           <p className="mt-2 max-w-xs text-gray-700">
@@ -22,15 +22,15 @@ const Footer = () => {
         <div className="flex flex-col gap-2">
           <h1 className="mb-2 font-bold">Discover</h1>
 
-          <Link to="" className="hover:text-orange-500">
+          <Link to="" className="hover:text-green-500">
             Explore
           </Link>
 
-          <Link to="" className="hover:text-orange-500">
+          <Link to="" className="hover:text-green-500">
             How it works
           </Link>
 
-          <Link to="" className="hover:text-orange-500">
+          <Link to="" className="hover:text-green-500">
             Home
           </Link>
         </div>
@@ -39,15 +39,15 @@ const Footer = () => {
         <div className="flex flex-col gap-2">
           <h1 className="mb-2 font-bold">Hosting</h1>
 
-          <p className="cursor-pointer hover:text-orange-500">
+          <p className="cursor-pointer hover:text-green-500">
             Become a Host
           </p>
 
-          <p className="cursor-pointer hover:text-orange-500">
+          <p className="cursor-pointer hover:text-green-500">
             Host Dashboard
           </p>
 
-          <p className="cursor-pointer hover:text-orange-500">
+          <p className="cursor-pointer hover:text-green-500">
             Verification
           </p>
         </div>
@@ -56,15 +56,15 @@ const Footer = () => {
         <div className="flex flex-col gap-2">
           <h1 className="mb-2 font-bold">Support</h1>
 
-          <p className="cursor-pointer hover:text-orange-500">
+          <p className="cursor-pointer hover:text-green-500">
             Help Center
           </p>
 
-          <p className="cursor-pointer hover:text-orange-500">
+          <p className="cursor-pointer hover:text-green-500">
             Contact
           </p>
 
-          <p className="cursor-pointer hover:text-orange-500">
+          <p className="cursor-pointer hover:text-green-500">
             Cancellation Policy
           </p>
         </div>
@@ -73,11 +73,11 @@ const Footer = () => {
         <div className="flex flex-col gap-2">
           <h1 className="mb-2 font-bold">Legal</h1>
 
-          <p className="cursor-pointer hover:text-orange-500">
+          <p className="cursor-pointer hover:text-green-500">
             Terms
           </p>
 
-          <p className="cursor-pointer hover:text-orange-500">
+          <p className="cursor-pointer hover:text-green-500">
             Privacy
           </p>
         </div>

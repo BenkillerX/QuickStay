@@ -29,6 +29,8 @@ import OwnerMessages from "./pages/landlord/OwnerMessages"
 import OwnerNotifications from "./pages/landlord/OwnerNotifications"
 import OwnerSettings from "./pages/landlord/OwnerSettings"
 import ScrollToTop from "./components/common/ScrollToTop"
+import Help from "./pages/public/Help"
+import BackToTop from "./components/common/BackToTop"
 
 const App = () => {
   return (
@@ -42,6 +44,7 @@ const App = () => {
           <Route path="/explore" element={<ExplorePage/>}/>
           <Route path="/How-it-works" element={<HowItWorks/>}/>
           <Route path="/propertydetails/:id"  element={<PropertyDetails/>}/>
+          <Route path="/help" element={<Help/>}/>
         </Route>
         {/* Tenant Pages Routes */}
         <Route element={<TenantLayout/>}>
@@ -73,8 +76,9 @@ const App = () => {
          <Route path="/tenant/onboarding" element={<TenantOnboarding/>}/>
          <Route path="/service-provider/onboarding" element={<ServiceProviderOnboarding/>}/>
          <Route path="/owner/onboarding" element={<PropertyOwnerOnboarding/>}/>
-
+        
       </Routes>
+      <BackToTop/>
     </>
   )
 }

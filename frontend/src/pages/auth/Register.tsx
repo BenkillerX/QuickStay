@@ -1,8 +1,21 @@
 import { Link } from "react-router-dom";
+import {
+  FiArrowLeft,
+} from "react-icons/fi";
 
 const Register = () => {
   return (
     <section className="min-h-screen w-full flex items-center justify-center px-4 py-10 bg-gray-50">
+      {/* Back to Home */}
+        <div className="absolute left-5 top-5 z-20 sm:left-8 sm:top-7">
+          <Link
+            to="/"
+            className="flex items-center text-sm font-medium text-gray-600 transition hover:text-green-600"
+          >
+            <FiArrowLeft size={18} />
+           Back to Green<span className="text-green-500">Spring</span>Homes
+          </Link>
+        </div>
       <div className="w-full max-w-4xl">
         {/* Heading */}
         <div className="text-center mb-10">

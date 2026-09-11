@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiMenu, FiX } from "react-icons/fi";
+import { FiMenu, FiX, FiHelpCircle,  FiChevronRight,FiPlus,  } from "react-icons/fi";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,68 +38,115 @@ const Navbar = () => {
         </div>
 
         {/* MOBILE SIDEBAR */}
-        <div
-          className={`fixed top-0 right-0 h-screen w-72 bg-white shadow-xl z-50 transform transition-transform duration-300 md:hidden ${
-            isOpen ? "translate-x-0" : "translate-x-full"
-          }`}
-        >
-          {/* Sidebar Header */}
-          <div className="flex items-center justify-between px-5 py-4 border-b">
-            <h2 className="text-xl font-bold">
-              Quick<span className="text-orange-500">Stay</span>
-            </h2>
+       <div
+  className={`fixed inset-y-0 right-0 z-50 w-[85%] max-w-sm transform bg-white shadow-2xl transition-transform duration-300 md:hidden ${
+    isOpen ? "translate-x-0" : "translate-x-full"
+  }`}
+>
+  {/* Header */}
+  <div className="flex items-center justify-between border-b border-gray-100 px-5 py-5">
+    <Link to="/" onClick={closeMenu}>
+      <h2 className="text-xl font-bold tracking-tight text-gray-900">
+        Green<span className="text-green-600">Spring</span>Home
+      </h2>
+    </Link>
 
-            <button
-              onClick={closeMenu}
-              className="text-2xl text-gray-700"
-              aria-label="Close menu"
-            >
-              <FiX />
-            </button>
-          </div>
+    <button
+      onClick={closeMenu}
+      className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-600 transition hover:bg-green-50 hover:text-green-600"
+      aria-label="Close menu"
+    >
+      <FiX size={20} />
+    </button>
+  </div>
 
-          {/* Sidebar Links */}
-          <ul className="flex flex-col px-5 py-6 gap-5">
-            {navLinks.map((link) => (
-              <li key={link.name}>
-                <Link
-                  to={link.path}
-                  onClick={closeMenu}
-                  className="block text-gray-700 font-medium hover:text-orange-500 transition duration-300"
-                >
-                  {link.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
+  {/* Navigation */}
+  <div className="flex h-[calc(100vh-81px)] flex-col px-5 py-6">
 
-          {/* Sidebar Buttons */}
-          <div className="px-5 flex flex-col gap-3">
-            <Link
-              to="/login"
-              onClick={closeMenu}
-              className="w-full text-center px-4 py-2 bg-orange-500 rounded-lg text-white"
-            >
-              Login
-            </Link>
+    <p className="mb-3 px-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
+      Navigation
+    </p>
 
-            <Link
-              to="/register"
-              onClick={closeMenu}
-              className="w-full text-center px-4 py-2 border-2 border-orange-500 rounded-lg text-orange-500 hover:bg-orange-500 hover:text-white transition"
-            >
-              Sign Up
-            </Link>
+    <ul className="space-y-1">
+      {navLinks.map((link) => (
+        <li key={link.name}>
+          <Link
+            to={link.path}
+            onClick={closeMenu}
+            className="flex items-center justify-between rounded-xl px-3 py-3.5 text-sm font-medium text-gray-700 transition hover:bg-green-50 hover:text-green-600"
+          >
+            <span>{link.name}</span>
 
-            <Link
-              to="/list-property"
-              onClick={closeMenu}
-              className="w-full text-center bg-orange-500 px-4 py-2 rounded-lg text-white"
-            >
-              List Property
-            </Link>
-          </div>
+            <FiChevronRight
+              size={17}
+              className="text-gray-400"
+            />
+          </Link>
+        </li>
+      ))}
+    </ul>
+
+    {/* Divider */}
+    <div className="my-6 border-t border-gray-100" />
+
+    {/* Account */}
+    <p className="mb-3 px-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
+      Account
+    </p>
+
+    <div className="space-y-3">
+      <Link
+        to="/login"
+        onClick={closeMenu}
+        className="flex w-full items-center justify-center rounded-xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-700 transition hover:border-green-600 hover:text-green-600"
+      >
+        Login
+      </Link>
+
+      <Link
+        to="/register"
+        onClick={closeMenu}
+        className="flex w-full items-center justify-center rounded-xl bg-green-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700"
+      >
+        Create an Account
+      </Link>
+    </div>
+
+    {/* Host CTA */}
+    <div className="mt-auto">
+      <div className="rounded-2xl bg-green-50 p-4">
+        <div className="mb-3">
+          <p className="text-sm font-semibold text-gray-900">
+            Have a property?
+          </p>
+
+          <p className="mt-1 text-xs leading-5 text-gray-500">
+            List your property on QuickStay and reach potential tenants.
+          </p>
         </div>
+
+        <Link
+          to="/list-property"
+          onClick={closeMenu}
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-green-700"
+        >
+          <FiPlus size={17} />
+          List Your Property
+        </Link>
+      </div>
+
+      {/* Support */}
+      <Link
+        to="/help"
+        onClick={closeMenu}
+        className="mt-4 flex items-center justify-center gap-2 py-2 text-sm font-medium text-gray-500 transition hover:text-green-600"
+      >
+        <FiHelpCircle size={17} />
+        Need help?
+      </Link>
+    </div>
+  </div>
+</div>
 
         {/* OVERLAY */}
         {isOpen && (
@@ -124,7 +171,7 @@ const Navbar = () => {
               <li key={link.name}>
                 <Link
                   to={link.path}
-                  className="text-gray-700 font-medium hover:text-orange-500 transition duration-300"
+                  className="text-gray-700 font-medium hover:text-green-500 transition duration-300"
                 >
                   {link.name}
                 </Link>
@@ -135,22 +182,23 @@ const Navbar = () => {
           {/* Actions */}
           <div className="flex gap-3 items-center">
             <Link
+              to="/help"
+              className="flex items-center justify-center gap-2 px-4 py-1.5 bg-white text-green-500 rounded-lg  hover:bg-green-600 hover:text-white transition"
+            >
+              <FiHelpCircle size={18} />
+              Help
+            </Link>
+
+            <Link
               to="/login"
-              className="px-4 py-1.5 bg-orange-500 rounded-lg text-white hover:bg-orange-600 transition"
+              className="px-4 py-1.5 border-2 border-green-500 text-green-500 hover:bg-green-500  hover:text-white text-sm rounded-lg transition"
             >
-              Login
+              Sign In
             </Link>
 
             <Link
-              to="/register"
-              className="px-4 py-1.5 border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white text-sm rounded-lg transition"
-            >
-              Sign Up
-            </Link>
-
-            <Link
-              to="/list-property"
-              className="bg-orange-500 px-4 py-1.5 rounded-xl text-white hover:bg-orange-600 transition"
+              to="/register/property-owner"
+              className="bg-green-500 px-4 py-1.5 rounded-xl text-white hover:bg-green-600 transition"
             >
               List Property
             </Link>
