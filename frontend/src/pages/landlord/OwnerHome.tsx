@@ -1,5 +1,4 @@
 import {
-  FiHome,
   FiEye,
   // FiUsers,
   FiMessageCircle,
@@ -8,7 +7,9 @@ import {
   // FiMapPin,
   FiCalendar,
   FiClock,
+   FiHome, FiDroplet,
 } from "react-icons/fi";
+import { MdBed } from "react-icons/md";
 import { useAuth } from "../../context/useAuth";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -48,16 +49,17 @@ export interface Property {
 
 const OwnerHome = () => {
   const {currentUser} = useAuth()
-  const [userPorperties, setUserPorperties] = useState<Property[]>([]);
   const userInitial = currentUser?.lastname || "UnKnown";
-
+  const [userPorperties, setUserPorperties] = useState<Property[]>([]);
+  const [propertiesCount, setPropertiesCount] = useState<number>(0)
+  
 useEffect(() => {
   const getUserProperties = async () => {
     try {
       const response = await api.get("/api/properties/");
 
       setUserPorperties(response.data.properties);
-      console.log(response.data);
+      setPropertiesCount(response.data.count)
       
     } catch (error) {
       console.error(error);
@@ -126,7 +128,7 @@ useEffect(() => {
           </div>
 
           <h2 className="text-2xl font-bold text-gray-900">
-            0
+            {propertiesCount}
           </h2>
 
           <p className="text-sm text-gray-500 mt-1">
@@ -221,10 +223,10 @@ useEffect(() => {
       </p>
     </div>
 
-    <button className="flex items-center gap-1 text-sm font-medium text-green-600 hover:text-green-700">
+    <Link to="/owner/properties" className="flex items-center gap-1 text-sm font-medium text-green-600 hover:text-green-700">
       View all
       <FiArrowRight size={16} />
-    </button>
+    </Link>
   </div>
 
  <div className="p-5 space-y-4">
@@ -288,15 +290,18 @@ useEffect(() => {
           <div className="flex flex-wrap items-center gap-4 mt-4 text-sm text-gray-600">
 
             <span>
-              🛏 {property.bedrooms} Bedrooms
+              <MdBed size={16} />
+               {property.bedrooms} Bedrooms
             </span>
 
             <span>
-              🛁 {property.bathrooms} Bathrooms
+              <FiDroplet size={16} />
+               {property.bathrooms} Bathrooms
             </span>
 
             <span className="capitalize">
-              🏠 {property.propertyType}
+              <FiHome size={16} />
+               {property.propertyType}
             </span>
 
           </div>
@@ -308,7 +313,8 @@ useEffect(() => {
             <div className="flex items-center gap-5 text-xs text-gray-500">
 
               <span>
-                👁 {property.views} views
+                <FiEye size={15} />
+               {property.views} views
               </span>
 
               <span className="capitalize">
@@ -376,7 +382,7 @@ useEffect(() => {
 
           <div className="p-4 space-y-2">
 
-            <button className="group flex w-full items-center gap-4 rounded-xl p-4 text-left transition hover:bg-gray-50">
+            <Link to="/owner/properties/add" className="group flex w-full items-center gap-4 rounded-xl p-4 text-left transition hover:bg-gray-50">
 
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-green-50 text-green-600">
                 <FiPlus size={19} />
@@ -396,12 +402,12 @@ useEffect(() => {
                 size={17}
                 className="text-gray-400 transition group-hover:translate-x-1"
               />
-            </button>
+            </Link>
 
 
-            <button className="group flex w-full items-center gap-4 rounded-xl p-4 text-left transition hover:bg-gray-50">
+            <Link to="/owner/properties" className="group flex w-full items-center gap-4 rounded-xl p-4 text-left transition hover:bg-gray-50">
 
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-green-50 text-green-600">
                 <FiHome size={19} />
               </div>
 
@@ -419,18 +425,18 @@ useEffect(() => {
                 size={17}
                 className="text-gray-400 transition group-hover:translate-x-1"
               />
-            </button>
+            </Link>
 
 
-            <button className="group flex w-full items-center gap-4 rounded-xl p-4 text-left transition hover:bg-gray-50">
+            <Link to="/owner/notifications" className="group flex w-full items-center gap-4 rounded-xl p-4 text-left transition hover:bg-gray-50">
 
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-green-50 text-green-600">
                 <FiCalendar size={19} />
               </div>
 
               <div className="flex-1">
                 <p className="text-sm font-semibold text-gray-800">
-                  Inspection Requests
+                  Notifications
                 </p>
 
                 <p className="text-xs text-gray-500 mt-1">
@@ -442,12 +448,12 @@ useEffect(() => {
                 size={17}
                 className="text-gray-400 transition group-hover:translate-x-1"
               />
-            </button>
+            </Link>
 
 
-            <button className="group flex w-full items-center gap-4 rounded-xl p-4 text-left transition hover:bg-gray-50">
+            <Link to="/owner/messages" className="group flex w-full items-center gap-4 rounded-xl p-4 text-left transition hover:bg-gray-50">
 
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-green-50 text-green-600">
                 <FiMessageCircle size={19} />
               </div>
 
@@ -465,7 +471,7 @@ useEffect(() => {
                 size={17}
                 className="text-gray-400 transition group-hover:translate-x-1"
               />
-            </button>
+            </Link>
 
           </div>
         </div>

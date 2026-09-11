@@ -25,11 +25,17 @@ import ServiceProviderOnboarding from "./pages/onboarding/ServiceProviderOnboard
 import PropertyOwnerOnboarding from "./pages/onboarding/PropertyOwnerOnboarding"
 import OwnerProperties from "./pages/landlord/OwnerProperties"
 import Addproperties from "./pages/landlord/Addproperties"
+import OwnerMessages from "./pages/landlord/OwnerMessages"
+import OwnerNotifications from "./pages/landlord/OwnerNotifications"
+import OwnerSettings from "./pages/landlord/OwnerSettings"
+import ScrollToTop from "./components/common/ScrollToTop"
 
 const App = () => {
   return (
     <>
+    <ScrollToTop/>
       <Routes>
+        
         {/* Public Pages Routes */}
         <Route element={<PublicLayout/>}>
           <Route path="/" element={<LandingPage/>}/>
@@ -51,9 +57,9 @@ const App = () => {
             <Route path="/owner/" element={<OwnerHome/>}/>
             <Route path="/owner/properties" element={<OwnerProperties/>}/>
             <Route path="/owner/properties/add" element={<Addproperties/>}/>
-            <Route path="/owner/messages" element={<OwnerHome/>}/>
-            <Route path="/owner/notifications" element={<OwnerHome/>}/>
-            <Route path="/owner/settings" element={<OwnerHome/>}/>
+            <Route path="/owner/messages" element={<OwnerMessages/>}/>
+            <Route path="/owner/notifications" element={<OwnerNotifications/>}/>
+            <Route path="/owner/settings" element={<OwnerSettings/>}/>
         </Route>
       <Route element={<ServiceProviderLayout/>}>
        <Route path="/service-provider/" element={<ServiceHome/>}/> 

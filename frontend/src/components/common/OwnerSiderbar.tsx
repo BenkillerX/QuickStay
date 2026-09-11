@@ -5,9 +5,7 @@ import { useAuth } from "../../context/useAuth";
 import {
   FiHome,
   FiBriefcase,
-  FiClipboard,
   FiMessageCircle,
-  FiDollarSign,
   FiBell,
   FiSettings,
   FiLogOut,
@@ -179,23 +177,9 @@ const OwnerSiderbar = () => {
         />
 
         <SidebarLink
-          icon={<FiClipboard />}
-          label="Requests"
-          to="/owner/requests"
-          collapsed={isCollapsed}
-        />
-
-        <SidebarLink
           icon={<FiMessageCircle />}
           label="Messages"
           to="/owner/messages"
-          collapsed={isCollapsed}
-        />
-
-        <SidebarLink
-          icon={<FiDollarSign />}
-          label="Earnings"
-          to="/owner/earnings"
           collapsed={isCollapsed}
         />
 

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   FiPlus,
   FiSearch,
@@ -8,10 +9,65 @@ import {
   FiEye,
 //   FiMoreVertical,
   FiHome,
+  FiDroplet
 } from "react-icons/fi";
+import { MdBed } from "react-icons/md";
 import { Link } from "react-router-dom";
+import api from "../../services/api";
 
+
+export interface Property {
+  _id: string;
+  owner: string;
+
+  title: string;
+  description: string;
+
+  propertyType: string;
+  listingType: string;
+
+  price: number;
+  bedrooms: number;
+  bathrooms: number;
+
+  images: string[];
+
+  status: string;
+  verificationStatus: string;
+
+  views: number;
+
+  location: {
+    state: string;
+    city: string;
+    area: string;
+    address: string;
+  };
+
+  createdAt: string;
+  updatedAt: string;
+}
 const OwnerProperties = () => {
+
+    const [userPorperties, setUserPorperties] = useState<Property[]>([]);
+    const [propertiesCount, setPropertiesCount] = useState<number>(0)
+    
+  useEffect(() => {
+    const getUserProperties = async () => {
+      try {
+        const response = await api.get("/api/properties/");
+  
+        setUserPorperties(response.data.properties);
+        setPropertiesCount(response.data.count);
+        
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    getUserProperties();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
 
@@ -71,7 +127,7 @@ const OwnerProperties = () => {
               </p>
 
               <p className="text-xl font-bold text-gray-900">
-                0
+                {propertiesCount}
               </p>
             </div>
           </div>
@@ -188,207 +244,240 @@ const OwnerProperties = () => {
       {/* Property Section */}
       <div className="rounded-2xl bg-white border border-gray-100 shadow-sm">
 
-        {/* Section Header */}
-        <div className="flex items-center justify-between border-b border-gray-100 p-5">
+  {/* Section Header */}
+  <div className="flex items-center justify-between border-b border-gray-100 p-5">
 
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900">
-              Your Listings
-            </h2>
+    <div>
+      <h2 className="text-lg font-semibold text-gray-900">
+        Your Listings
+      </h2>
 
-            <p className="text-sm text-gray-500 mt-1">
-              Properties you've added to QuickStay
-            </p>
-          </div>
+      <p className="text-sm text-gray-500 mt-1">
+        Properties you've added to QuickStay
+      </p>
+    </div>
 
-          <span className="hidden sm:block text-sm text-gray-400">
-            0 properties
-          </span>
+    <span className="hidden sm:block text-sm text-gray-400">
+      {userPorperties.length}{" "}
+      {userPorperties.length === 1 ? "property" : "properties"}
+    </span>
 
-        </div>
+  </div>
 
 
-        {/* Empty State */}
-        <div className="flex flex-col items-center justify-center px-6 py-20 text-center">
+  {/* Dynamic Content */}
+  {userPorperties.length === 0 ? (
 
-          <div
-            className="
-              flex
-              h-20
-              w-20
-              items-center
-              justify-center
-              rounded-3xl
-              bg-green-50
-              text-green-600
-              mb-6
-            "
-          >
-            <FiHome size={34} />
-          </div>
+    /* Empty State */
+    <div className="flex flex-col items-center justify-center px-6 py-20 text-center">
 
-          <h3 className="text-lg font-semibold text-gray-900">
-            No properties yet
-          </h3>
-
-          <p className="mt-2 max-w-md text-sm leading-6 text-gray-500">
-            You haven't added any properties yet. List your first
-            property and make it discoverable to people searching
-            for homes on QuickStay.
-          </p>
-
-          <Link
-          to="/owner/properties/add"
-            className="
-              mt-6
-              inline-flex
-              items-center
-              gap-2
-              rounded-xl
-              bg-green-600
-              px-5
-              py-3
-              text-sm
-              font-semibold
-              text-white
-              transition
-              hover:bg-green-700
-            "
-          >
-            <FiPlus size={18} />
-            Add Your First Property
-          </Link>
-
-        </div>
-
+      <div
+        className="
+          flex
+          h-20
+          w-20
+          items-center
+          justify-center
+          rounded-3xl
+          bg-green-50
+          text-green-600
+          mb-6
+        "
+      >
+        <FiHome size={34} />
       </div>
 
+      <h3 className="text-lg font-semibold text-gray-900">
+        No properties yet
+      </h3>
 
-      {/* ------------------------------------------------ */}
-      {/* PROPERTY CARD EXAMPLE                            */}
-      {/* ------------------------------------------------ */}
-      {/* 
-        When you connect MongoDB, the empty state above
-        will be replaced by a map over your properties.
+      <p className="mt-2 max-w-md text-sm leading-6 text-gray-500">
+        You haven't added any properties yet. List your first
+        property and make it discoverable to people searching
+        for homes on QuickStay.
+      </p>
 
-        Example structure:
+      <Link
+        to="/owner/properties/add"
+        className="
+          mt-6
+          inline-flex
+          items-center
+          gap-2
+          rounded-xl
+          bg-green-600
+          px-5
+          py-3
+          text-sm
+          font-semibold
+          text-white
+          transition
+          hover:bg-green-700
+        "
+      >
+        <FiPlus size={18} />
+        Add Your First Property
+      </Link>
 
-        {properties.map((property) => (
-          <PropertyCard
-            key={property._id}
-            property={property}
-          />
-        ))}
-      */}
+    </div>
 
+  ) : (
 
-      {/* Example Property Card */}
+    /* Properties */
+    <div className="p-5 space-y-4">
 
-      {/*
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 p-5">
+      {userPorperties.map((property) => (
 
-        <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+        <div
+          key={property._id}
+          className="
+            flex
+            flex-col
+            md:flex-row
+            overflow-hidden
+            rounded-2xl
+            border
+            border-gray-100
+            hover:shadow-sm
+            transition
+          "
+        >
 
-          <div className="relative h-52 bg-gray-100">
-
+          {/* Image */}
+          <div className="w-full md:w-56 h-48 md:h-auto shrink-0">
             <img
-              src={property.image}
+              src={property.images?.[0]}
               alt={property.title}
-              className="h-full w-full object-cover"
+              className="w-full h-full object-cover"
             />
-
-            <span className="
-              absolute
-              left-3
-              top-3
-              rounded-full
-              bg-green-100
-              px-3
-              py-1
-              text-xs
-              font-semibold
-              text-green-700
-            ">
-              Active
-            </span>
-
-            <button className="
-              absolute
-              right-3
-              top-3
-              flex
-              h-9
-              w-9
-              items-center
-              justify-center
-              rounded-full
-              bg-white/90
-              text-gray-600
-              shadow-sm
-              hover:bg-white
-            ">
-              <FiMoreVertical size={18} />
-            </button>
-
           </div>
 
 
-          <div className="p-5">
+          {/* Details */}
+          <div className="flex-1 p-5">
 
-            <h3 className="font-semibold text-gray-900">
-              3 Bedroom Modern Apartment
-            </h3>
+            {/* Title + Status */}
+            <div className="flex items-start justify-between gap-4">
 
-            <div className="mt-2 flex items-center gap-1 text-sm text-gray-500">
-              <FiMapPin size={15} />
-              Ikeja, Lagos
-            </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {property.title}
+                </h3>
 
-            <p className="mt-4 text-lg font-bold text-gray-900">
-              ₦2,500,000
-              <span className="text-xs font-normal text-gray-500">
-                {" "} / year
-              </span>
-            </p>
+                <p className="mt-1 text-sm text-gray-500">
+                  {property.location?.area},{" "}
+                  {property.location?.city},{" "}
+                  {property.location?.state}
+                </p>
+              </div>
 
-
-            <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-4">
-
-              <span className="text-xs text-gray-500">
-                24 views
-              </span>
-
-              <div className="flex items-center gap-2">
-
-                <button className="
-                  flex
-                  items-center
-                  gap-1.5
-                  rounded-lg
+              <span
+                className={`
+                  shrink-0
+                  rounded-full
                   px-3
-                  py-2
+                  py-1
                   text-xs
                   font-medium
-                  text-gray-600
-                  hover:bg-gray-50
-                ">
-                  <FiEdit2 size={14} />
+                  ${
+                    property.status === "active"
+                      ? "bg-green-50 text-green-700"
+                      : "bg-gray-100 text-gray-600"
+                  }
+                `}
+              >
+                {property.status}
+              </span>
+
+            </div>
+
+
+            {/* Price */}
+            <div className="mt-4">
+
+              <p className="text-xl font-bold text-gray-900">
+                ₦{property.price.toLocaleString()}
+              </p>
+
+              <p className="text-xs text-gray-500 capitalize">
+                For {property.listingType}
+              </p>
+
+            </div>
+
+
+            {/* Features */}
+            <div className="flex flex-wrap items-center gap-4 mt-4 text-sm text-gray-600">
+
+              <span className="flex items-center gap-1.5">
+                <MdBed
+                  size={18}
+                  className="text-green-600"
+                />
+                {property.bedrooms} Bedrooms
+              </span>
+
+              <span className="flex items-center gap-1.5">
+                <FiDroplet
+                  size={16}
+                  className="text-green-600"
+                />
+                {property.bathrooms} Bathrooms
+              </span>
+
+              <span className="flex items-center gap-1.5 capitalize">
+                <FiHome
+                  size={16}
+                  className="text-green-600"
+                />
+                {property.propertyType}
+              </span>
+
+            </div>
+
+
+            {/* Bottom */}
+            <div className="flex flex-wrap items-center justify-between gap-4 mt-5 pt-4 border-t border-gray-100">
+
+              {/* Stats */}
+              <div className="flex items-center gap-5 text-xs text-gray-500">
+
+                <span className="flex items-center gap-1.5">
+                  <FiEye
+                    size={15}
+                    className="text-green-600"
+                  />
+                  {property.views} views
+                </span>
+
+                <span className="capitalize">
+                  Verification:{" "}
+                  <span
+                    className={
+                      property.verificationStatus === "approved"
+                        ? "text-green-600 font-medium"
+                        : "text-yellow-600 font-medium"
+                    }
+                  >
+                    {property.verificationStatus}
+                  </span>
+                </span>
+
+              </div>
+
+
+              {/* Actions */}
+              <div className="flex items-center gap-2">
+
+                <button className="px-3 py-1.5 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50">
+                  View
+                </button>
+
+                <button className="px-3 py-1.5 text-sm font-medium text-green-600 border border-green-200 rounded-lg hover:bg-green-50">
                   Edit
                 </button>
 
-                <button className="
-                  flex
-                  items-center
-                  gap-1.5
-                  rounded-lg
-                  px-3
-                  py-2
-                  text-xs
-                  font-medium
-                  text-red-500
-                  hover:bg-red-50
-                ">
-                  <FiTrash2 size={14} />
+                <button className="px-3 py-1.5 text-sm font-medium text-red-600 border border-red-200 rounded-lg hover:bg-red-50">
                   Delete
                 </button>
 
@@ -400,9 +489,13 @@ const OwnerProperties = () => {
 
         </div>
 
-      </div>
-      */}
+      ))}
 
+    </div>
+
+  )}
+
+</div>
     </div>
   );
 };
