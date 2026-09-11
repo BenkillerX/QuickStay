@@ -69,3 +69,26 @@ export async function addProperty(req, res) {
   });
 }
 }
+
+export async function getProperties(req, res) {
+  try {
+    const userId = req.user.id;
+    const properties = await Property.find({
+      owner: userId
+    });
+
+    return res.status(200).json({
+      success: true,
+      count: properties.length,
+      properties
+    });
+
+  } catch (error) {
+    console.error("Get properties error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to get properties"
+    });
+  }
+}

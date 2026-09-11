@@ -1,5 +1,5 @@
 import {Router} from "express"
-import { addProperty } from "./properties.controllers.js"
+import { addProperty, getProperties } from "./properties.controllers.js"
 import { authenticateToken } from "../../middleware/auth.middleware.js"
 import { authorizeRoles } from "../../middleware/role.middleware.js"
 import { propertyValidator } from "../../validators/property.validator.js"
@@ -9,5 +9,5 @@ import { upload } from "../../middleware/upload.middleware.js"
 const propertyRoutes = Router()
 
 propertyRoutes.post('/',authenticateToken , authorizeRoles("propertyOwner"), upload.array("images", 5),propertyValidator, validateRequest ,addProperty)
-
+propertyRoutes.get('/', authenticateToken, authorizeRoles("propertyOwner"), getProperties)
 export default propertyRoutes

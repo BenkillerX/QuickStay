@@ -11,11 +11,42 @@ import {
 } from "react-icons/fi";
 import { useAuth } from "../../context/useAuth";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import api from "../../services/api";
+
+interface Property {
+  _id: string;
+  title: string;
+  price: number;
+  images: string[];
+  location: {
+    state: string;
+    city: string;
+    area: string;
+    address: string;
+  };
+  status: string;
+}
+
 
 const OwnerHome = () => {
   const {currentUser} = useAuth()
+  const [userPorperties, setUserPorperties] = useState<Property[]>([]);
+  const userInitial = currentUser?.lastname || "UnKnown";
 
-  const userInitial = currentUser?.lastname || "UnKnown"
+  useEffect(() => {
+  const getUserProperties = async () => {
+    try {
+      const response = await api.get("/properties/")
+
+      setUserPorperties(response.data.properties)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  getUserProperties()
+}, [])
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
 
@@ -159,64 +190,81 @@ const OwnerHome = () => {
         {/* My Properties */}
         <div className="xl:col-span-2 rounded-2xl bg-white border border-gray-100 shadow-sm">
 
-          <div className="flex items-center justify-between p-5 border-b border-gray-100">
-            <div>
-              <h2 className="text-lg font-semibold text-gray-900">
-                My Properties
-              </h2>
+  {/* Header */}
+  <div className="flex items-center justify-between p-5 border-b border-gray-100">
+    <div>
+      <h2 className="text-lg font-semibold text-gray-900">
+        My Properties
+      </h2>
 
-              <p className="text-sm text-gray-500 mt-1">
-                Manage your listed properties
-              </p>
-            </div>
+      <p className="text-sm text-gray-500 mt-1">
+        Manage your listed properties
+      </p>
+    </div>
 
-            <button className="flex items-center gap-1 text-sm font-medium text-green-600 hover:text-green-700">
-              View all
-              <FiArrowRight size={16} />
-            </button>
-          </div>
+    <button className="flex items-center gap-1 text-sm font-medium text-green-600 hover:text-green-700">
+      View all
+      <FiArrowRight size={16} />
+    </button>
+  </div>
 
+  {/* Dynamic Content */}
+  {userPorperties.length === 0 ? (
 
-          {/* Empty State */}
-          <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
+    // EMPTY STATE
+    <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
 
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-green-50 text-green-600 mb-5">
-              <FiHome size={28} />
-            </div>
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-green-50 text-green-600 mb-5">
+        <FiHome size={28} />
+      </div>
 
-            <h3 className="text-base font-semibold text-gray-900">
-              You haven't listed any properties yet
-            </h3>
+      <h3 className="text-base font-semibold text-gray-900">
+        You haven't listed any properties yet
+      </h3>
 
-            <p className="max-w-md text-sm text-gray-500 mt-2">
-              Add your first property to start reaching potential
-              tenants on QuickStay.
-            </p>
+      <p className="max-w-md text-sm text-gray-500 mt-2">
+        Add your first property to start reaching potential
+        tenants on QuickStay.
+      </p>
 
-            <button
-              className="
-                mt-6
-                inline-flex
-                items-center
-                gap-2
-                rounded-xl
-                border
-                border-green-600
-                px-5
-                py-2.5
-                text-sm
-                font-semibold
-                text-green-600
-                transition
-                hover:bg-green-50
-              "
-            >
-              <FiPlus size={17} />
-              List a Property
-            </button>
+      <button
+        className="
+          mt-6
+          inline-flex
+          items-center
+          gap-2
+          rounded-xl
+          border
+          border-green-600
+          px-5
+          py-2.5
+          text-sm
+          font-semibold
+          text-green-600
+          transition
+          hover:bg-green-50
+        "
+      >
+        <FiPlus size={17} />
+        List a Property
+      </button>
 
-          </div>
+    </div>
+
+  ) : (
+
+    // PROPERTIES
+    <div className="p-5">
+      {userPorperties.map((property) => (
+        <div key={property._id}>
+          {property.title}
         </div>
+      ))}
+    </div>
+
+  )}
+
+</div>
 
 
         {/* Quick Actions */}
