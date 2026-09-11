@@ -1,7 +1,7 @@
 const ServiceHome = () => {
   return (
     <div>
-        Yep Your landing page
+        Coming Very soon
     </div>
   )
 }

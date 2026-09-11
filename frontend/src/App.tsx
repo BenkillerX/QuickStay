@@ -74,7 +74,7 @@ const App = () => {
          <Route path="/register/service-provider" element={<ServiceProvider/>}/>
          <Route path="/register/property-owner" element={<PropertyOwner/>}/>
          <Route path="/tenant/onboarding" element={<TenantOnboarding/>}/>
-         <Route path="/service-provider/onboarding" element={<ServiceProviderOnboarding/>}/>
+         <Route path="/provider/onboarding" element={<ServiceProviderOnboarding/>}/>
          <Route path="/owner/onboarding" element={<PropertyOwnerOnboarding/>}/>
         
       </Routes>
