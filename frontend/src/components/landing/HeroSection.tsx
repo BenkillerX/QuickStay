@@ -23,7 +23,7 @@ const HeroSection = () => {
       <h1 className="mt-7 max-w-3xl text-4xl font-bold leading-tight text-white sm:text-5xl md:text-6xl lg:text-7xl">
         Find A Place
         <br />
-        <span className="text-green-400">You Trust</span>
+        <span className="text-green-400">You Can Trust</span>
       </h1>
 
       {/* Description */}
