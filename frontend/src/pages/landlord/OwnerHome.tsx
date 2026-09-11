@@ -14,39 +14,58 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../../services/api";
 
-interface Property {
+export interface Property {
   _id: string;
+  owner: string;
+
   title: string;
+  description: string;
+
+  propertyType: string;
+  listingType: string;
+
   price: number;
+  bedrooms: number;
+  bathrooms: number;
+
   images: string[];
+
+  status: string;
+  verificationStatus: string;
+
+  views: number;
+
   location: {
     state: string;
     city: string;
     area: string;
     address: string;
   };
-  status: string;
-}
 
+  createdAt: string;
+  updatedAt: string;
+}
 
 const OwnerHome = () => {
   const {currentUser} = useAuth()
   const [userPorperties, setUserPorperties] = useState<Property[]>([]);
   const userInitial = currentUser?.lastname || "UnKnown";
 
-  useEffect(() => {
+useEffect(() => {
   const getUserProperties = async () => {
     try {
-      const response = await api.get("/properties/")
+      const response = await api.get("/api/properties/");
 
-      setUserPorperties(response.data.properties)
+      setUserPorperties(response.data.properties);
+      console.log(response.data);
+      
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
-  getUserProperties()
-}, [])
+  getUserProperties();
+}, []);
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
 
@@ -208,61 +227,135 @@ const OwnerHome = () => {
     </button>
   </div>
 
-  {/* Dynamic Content */}
-  {userPorperties.length === 0 ? (
+ <div className="p-5 space-y-4">
+  {userPorperties.map((property) => (
+    <div
+      key={property._id}
+      className="rounded-2xl border border-gray-100 bg-white overflow-hidden hover:shadow-sm transition"
+    >
+      <div className="flex flex-col md:flex-row">
 
-    // EMPTY STATE
-    <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
-
-      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-green-50 text-green-600 mb-5">
-        <FiHome size={28} />
-      </div>
-
-      <h3 className="text-base font-semibold text-gray-900">
-        You haven't listed any properties yet
-      </h3>
-
-      <p className="max-w-md text-sm text-gray-500 mt-2">
-        Add your first property to start reaching potential
-        tenants on QuickStay.
-      </p>
-
-      <button
-        className="
-          mt-6
-          inline-flex
-          items-center
-          gap-2
-          rounded-xl
-          border
-          border-green-600
-          px-5
-          py-2.5
-          text-sm
-          font-semibold
-          text-green-600
-          transition
-          hover:bg-green-50
-        "
-      >
-        <FiPlus size={17} />
-        List a Property
-      </button>
-
-    </div>
-
-  ) : (
-
-    // PROPERTIES
-    <div className="p-5">
-      {userPorperties.map((property) => (
-        <div key={property._id}>
-          {property.title}
+        {/* Property Image */}
+        <div className="w-full md:w-52 h-48 md:h-auto shrink-0">
+          <img
+            src={property.images?.[0]}
+            alt={property.title}
+            className="w-full h-full object-cover"
+          />
         </div>
-      ))}
-    </div>
 
-  )}
+        {/* Property Details */}
+        <div className="flex-1 p-5">
+
+          {/* Top section */}
+          <div className="flex items-start justify-between gap-4">
+
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">
+                {property.title}
+              </h3>
+
+              <p className="text-sm text-gray-500 mt-1">
+                {property.location?.area}, {property.location?.city},{" "}
+                {property.location?.state}
+              </p>
+            </div>
+
+            {/* Status */}
+            <span
+              className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium ${
+                property.status === "active"
+                  ? "bg-green-50 text-green-700"
+                  : "bg-gray-100 text-gray-600"
+              }`}
+            >
+              {property.status}
+            </span>
+          </div>
+
+          {/* Price */}
+          <div className="mt-4">
+            <p className="text-xl font-bold text-gray-900">
+              ₦{property.price.toLocaleString()}
+            </p>
+
+            <p className="text-xs text-gray-500 capitalize">
+              {property.listingType}
+            </p>
+          </div>
+
+          {/* Property Features */}
+          <div className="flex flex-wrap items-center gap-4 mt-4 text-sm text-gray-600">
+
+            <span>
+              🛏 {property.bedrooms} Bedrooms
+            </span>
+
+            <span>
+              🛁 {property.bathrooms} Bathrooms
+            </span>
+
+            <span className="capitalize">
+              🏠 {property.propertyType}
+            </span>
+
+          </div>
+
+          {/* Bottom section */}
+          <div className="flex flex-wrap items-center justify-between gap-4 mt-5 pt-4 border-t border-gray-100">
+
+            {/* Stats */}
+            <div className="flex items-center gap-5 text-xs text-gray-500">
+
+              <span>
+                👁 {property.views} views
+              </span>
+
+              <span className="capitalize">
+                Verification:{" "}
+                <span
+                  className={
+                    property.verificationStatus === "approved"
+                      ? "text-green-600 font-medium"
+                      : "text-yellow-600 font-medium"
+                  }
+                >
+                  {property.verificationStatus}
+                </span>
+              </span>
+
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center gap-2">
+
+              <button
+                className="px-3 py-1.5 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50"
+              >
+                View
+              </button>
+
+              <button
+                className="px-3 py-1.5 text-sm font-medium text-green-600 border border-green-200 rounded-lg hover:bg-green-50"
+              >
+                Edit
+              </button>
+
+              <button
+                className="px-3 py-1.5 text-sm font-medium text-red-600 border border-red-200 rounded-lg hover:bg-red-50"
+              >
+                Delete
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
 
 </div>
 

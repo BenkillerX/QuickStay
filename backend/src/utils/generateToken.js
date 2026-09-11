@@ -7,7 +7,7 @@ export function generateToken(user) {
         firstname:user.firstname,
         role:user.role
     }
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn:"15m"})
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn:"7d"})
     return token;
 }
 
