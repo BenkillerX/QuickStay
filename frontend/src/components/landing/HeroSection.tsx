@@ -28,7 +28,7 @@ const HeroSection = () => {
 
       {/* Description */}
       <p className="mt-6 max-w-2xl text-base leading-7 text-gray-100 sm:text-lg md:text-xl">
-        Comfortable homes, verified properties and flexible stays — all in
+        Comfortable homes, verified properties and flexible stays all in
         one place.
       </p>
 

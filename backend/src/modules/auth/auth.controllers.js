@@ -13,7 +13,6 @@ export async function registerTenant(req, res) {
             password
         } = req.body;
 
-        // Check if email already exists
         const existingUser = await User.findOne({ email });
 
         if (existingUser) {
@@ -22,11 +21,9 @@ export async function registerTenant(req, res) {
             });
         }
 
-        // Hash password
         const saltRounds = 12;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        // Create tenant
         const newTenant = new User({
             firstname,
             lastname,

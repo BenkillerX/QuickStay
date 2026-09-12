@@ -19,10 +19,8 @@ const TenantOnboarding = () => {
     try {
       await api.post("/api/onboarding/tenant", {
         phone,
-        // profileImage will be added later
       });
 
-      // Onboarding completed successfully
       navigate("/tenant");
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
