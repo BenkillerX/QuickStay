@@ -17,6 +17,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/onboarding', onboardingRoutes)
 app.use('/api/properties', propertyRoutes)
 app.use('/api/messages/conversations', messagesRoutes)
+
 app.get('/', (_, res)=>{
     return res.json({
         message:"Hello World and first live deployed backend and live"

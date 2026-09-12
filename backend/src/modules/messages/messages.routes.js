@@ -34,6 +34,5 @@ messagesRoutes.patch(
   markMessageAsRead
 );
 
-app.use("/api/messages/conversations", messagesRoutes);
 
 export default messagesRoutes;
