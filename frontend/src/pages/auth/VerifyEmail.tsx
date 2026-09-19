@@ -3,10 +3,12 @@ import { FiCheckCircle, FiMail, FiRefreshCw } from "react-icons/fi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
 
+
+
 const VerifyEmail = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const {verifyEmail} = useAuth()
+  const {verifyEmail, setCurrentUser} = useAuth()
   const email = location.state?.email || "your email address";
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
@@ -26,7 +28,7 @@ const VerifyEmail = () => {
     )}@${domain}`;
   };
 
- const handleSubmit = async (
+const handleSubmit = async (
   e: React.FormEvent<HTMLFormElement>
 ) => {
   e.preventDefault();
@@ -36,13 +38,14 @@ const VerifyEmail = () => {
   setLoading(true);
 
   try {
-  const verifiedData = await verifyEmail(email, code);
-    console.log(verifiedData);
-    
-    navigate("/tenant/onboarding");
+    const result = await verifyEmail(email, code);
+
+   localStorage.setItem("token", result.token);
+  setCurrentUser(result.user);
+
+navigate("/tenant/onboarding");
   } catch (error: unknown) {
     console.log(error);
-    
   } finally {
     setLoading(false);
   }

@@ -8,6 +8,26 @@ export interface User {
   onboardingCompleted: boolean;
 }
 
+export type VerifyEmailResponse = {
+  message: string;
+  token: string;
+  user: User;
+};
+
+// type VerifyEmailResponse = {
+//   message: string;
+//   token: string;
+//   user: {
+//     id: string;
+//     firstname: string;
+//     lastname: string;
+//     email: string;
+//     role: string;
+//     isEmailVerified: boolean;
+//     onboardingCompleted: boolean;
+//   };
+// };
+
 export interface AuthContextType {
   currentUser: User | null;
 
@@ -40,10 +60,11 @@ export interface AuthContextType {
     email: string,
     password: string
   ) => Promise<User>;
- verifyEmail: (
+verifyEmail: (
   email: string,
   code: string
-) => Promise<unknown>;
+) => Promise<VerifyEmailResponse>;
+
   logout: () => void;
   loading: boolean;
 }

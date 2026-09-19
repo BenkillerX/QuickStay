@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-import { AuthContext, type User } from "./AuthContext";
+import { AuthContext, type User, type VerifyEmailResponse } from "./AuthContext";
+
 
 export const AuthProvider = ({
   children,
@@ -146,11 +147,14 @@ export const AuthProvider = ({
 const verifyEmail = async (
   email: string,
   code: string
-) => {
-  const response = await api.post("/api/auth/verify-email", {
-    email,
-    code,
-  });
+): Promise <VerifyEmailResponse> => {
+  const response = await api.post(
+    "/api/auth/verify-email",
+    {
+      email,
+      code,
+    }
+  );
 
   return response.data;
 };
