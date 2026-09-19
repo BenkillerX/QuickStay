@@ -27,57 +27,50 @@ const PropertyOwner = () => {
     function toggleEye() {
   setShowPassword((prev) => !prev);
 }
-      async function hundleRegister(e:React.FormEvent<HTMLFormElement>) {
-        e.preventDefault()
-        try {
-          setLoading(true)
-         const user = await registerOwner(
-            firstname,
-            lastname,
-            email,
-            password
-         )
-         if (user.role === "tenant") {
-      if (!user.onboardingCompleted) {
-        navigate("/tenant/onboarding");
+    async function hundleRegister(
+  e: React.FormEvent<HTMLFormElement>
+) {
+  e.preventDefault();
+
+  try {
+    setLoading(true);
+
+    const result = await registerOwner(
+      firstname,
+      lastname,
+      email,
+      password
+    );
+
+    navigate("/verify-email", {
+      state: {
+        email: result.email,
+      },
+    });
+
+    setFirstname("");
+    setLastname("");
+    setEmail("");
+    setPassword("");
+  } catch (error) {
+    if (axios.isAxiosError<ErrorResponse>(error)) {
+      const backendErrors = error.response?.data?.errors;
+
+      if (backendErrors) {
+        setErrors(
+          backendErrors.map((error) => error.msg)
+        );
       } else {
-        navigate("/tenant/");
+        setErrors([
+          error.response?.data?.message ||
+            "Something went wrong.",
+        ]);
       }
-    } else if (user.role === "propertyOwner") {
-      if (!user.onboardingCompleted) {
-        navigate("/owner/onboarding");
-      } else {
-        navigate("/owner/");
-      }
-    } else if (user.role === "serviceProvider") {
-      if (!user.onboardingCompleted) {
-        navigate("/provider/onboarding");
-      } else {
-        navigate("/provider/");
-      }
-    } else if (user.role === "admin") {
-      navigate("/admin/");
     }
-        setFirstname("")
-        setLastname("")
-        setEmail("")
-        setPassword("")
-        }catch (error) {
-      if (axios.isAxiosError<ErrorResponse>(error)) {
-        const backendErrors = error.response?.data?.errors;
-    
-        if (backendErrors) {
-          setErrors(backendErrors.map((error) => error.msg));
-        } else {
-          setErrors([
-            error.response?.data?.message || "Something went wrong.",
-          ]);
-        }
-      }
-    }finally{
-      setLoading(false)
-    }
-    }
+  } finally {
+    setLoading(false);
+  }
+}
 
   return (
     <section className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-8 sm:px-6 lg:px-8">

@@ -14,20 +14,6 @@ export type VerifyEmailResponse = {
   user: User;
 };
 
-// type VerifyEmailResponse = {
-//   message: string;
-//   token: string;
-//   user: {
-//     id: string;
-//     firstname: string;
-//     lastname: string;
-//     email: string;
-//     role: string;
-//     isEmailVerified: boolean;
-//     onboardingCompleted: boolean;
-//   };
-// };
-
 export interface AuthContextType {
   currentUser: User | null;
 
@@ -40,26 +26,27 @@ export interface AuthContextType {
     password: string
   ) => Promise<User>;
 
- register: (
+register: (
   firstname: string,
   lastname: string,
   email: string,
   password: string
 ) => Promise<{ email: string }>;
 
-  registerOwner: (
-    firstname: string,
-    lastname: string,
-    email: string,
-    password: string
-  ) => Promise<User>;
+registerOwner: (
+  firstname: string,
+  lastname: string,
+  email: string,
+  password: string
+) => Promise<{ email: string }>;
 
-  registerServiceProvider: (
-    firstname: string,
-    lastname: string,
-    email: string,
-    password: string
-  ) => Promise<User>;
+registerServiceProvider: (
+  firstname: string,
+  lastname: string,
+  email: string,
+  password: string
+) => Promise<{ email: string }>
+
 verifyEmail: (
   email: string,
   code: string

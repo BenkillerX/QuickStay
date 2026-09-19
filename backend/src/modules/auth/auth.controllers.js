@@ -84,7 +84,6 @@ export async function registerPropertyOwner(req, res) {
             password
         } = req.body;
 
-        // Check if email already exists
         const existingUser = await User.findOne({ email });
 
         if (existingUser) {
@@ -93,41 +92,174 @@ export async function registerPropertyOwner(req, res) {
             });
         }
 
-        // Hash password
         const saltRounds = 12;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        // Create property owner
+        // Generate email verification code
+        const verificationCode = generateVerificationCode();
+
+        // Hash verification code before storing it
+        const hashedVerificationCode =
+            hashVerificationCode(verificationCode);
+
+        // Code expires in 10 minutes
+        const verificationExpires = new Date(
+            Date.now() + 10 * 60 * 1000
+        );
+
         const newPropertyOwner = new User({
             firstname,
             lastname,
             email,
             password: hashedPassword,
-            role: "propertyOwner"
+            role: "propertyOwner",
+
+            isEmailVerified: false,
+            emailVerificationCode: hashedVerificationCode,
+            emailVerificationExpires: verificationExpires
         });
 
         await newPropertyOwner.save();
 
+        // Send verification email
+        try {
+            await sendVerificationEmail(
+                newPropertyOwner.email,
+                verificationCode
+            );
+        } catch (emailError) {
+            console.error(
+                "Verification email error:",
+                emailError
+            );
+
+            // Delete account if email could not be sent
+            await User.findByIdAndDelete(newPropertyOwner._id);
+
+            return res.status(500).json({
+                message:
+                    "Account could not be created because the verification email could not be sent."
+            });
+        }
+
         return res.status(201).json({
-            message: "Property owner account created successfully.",
-            token: generateToken(newPropertyOwner),
-        user: {
-        id: newPropertyOwner._id,
-        firstname: newPropertyOwner.firstname,
-        lastname: newPropertyOwner.lastname,
-        email: newPropertyOwner.email,
-        role: newPropertyOwner.role
-    }
+            message:
+                "Account created. Please verify your email.",
+            email: newPropertyOwner.email
         });
 
     } catch (error) {
-        console.error("Property owner registration error:", error);
+        console.error(
+            "Property owner registration error:",
+            error
+        );
 
         return res.status(500).json({
-            message: "An error occurred while creating your account."
+            message:
+                "An error occurred while creating your account."
         });
     }
 }
+
+// export async function registerPropertyOwner(req, res) {
+//     try {
+//         const {
+//             firstname,
+//             lastname,
+//             email,
+//             password
+//         } = req.body;
+
+//         // Check if email already exists
+//         const existingUser = await User.findOne({ email });
+
+//         if (existingUser) {
+//             return res.status(400).json({
+//                 message: "An account with this email already exists."
+//             });
+//         }
+
+//         // Hash password
+//         const saltRounds = 12;
+//         const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+//         // Create property owner
+//         const newPropertyOwner = new User({
+//             firstname,
+//             lastname,
+//             email,
+//             password: hashedPassword,
+//             role: "propertyOwner"
+//         });
+
+//         await newPropertyOwner.save();
+
+//         return res.status(201).json({
+//             message: "Property owner account created successfully.",
+//             token: generateToken(newPropertyOwner),
+//         user: {
+//         id: newPropertyOwner._id,
+//         firstname: newPropertyOwner.firstname,
+//         lastname: newPropertyOwner.lastname,
+//         email: newPropertyOwner.email,
+//         role: newPropertyOwner.role
+//     }
+//         });
+
+//     } catch (error) {
+//         console.error("Property owner registration error:", error);
+
+//         return res.status(500).json({
+//             message: "An error occurred while creating your account."
+//         });
+//     }
+// }
+// export async function registerServiceProvider(req, res) {
+//     try {
+//         const {
+//             firstname,
+//             lastname,
+//             email,
+//             password
+//         } = req.body;
+
+//         // Check if email already exists
+//         const existingUser = await User.findOne({ email });
+
+//         if (existingUser) {
+//             return res.status(400).json({
+//                 message: "An account with this email already exists."
+//             });
+//         }
+
+//         // Hash password
+//         const saltRounds = 12;
+//         const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+//         // Create service provider
+//         const newServiceProvider = new User({
+//             firstname,
+//             lastname,
+//             email,
+//             password: hashedPassword,
+//             role: "serviceProvider"
+//         });
+
+//         await newServiceProvider.save();
+
+//         return res.status(201).json({
+//             message: "Service provider account created successfully.",
+//             token: generateToken(newServiceProvider)
+//         });
+
+//     } catch (error) {
+//         console.error("Service provider registration error:", error);
+
+//         return res.status(500).json({
+//             message: "An error occurred while creating your account."
+//         });
+//     }
+// }
 
 export async function registerServiceProvider(req, res) {
     try {
@@ -138,7 +270,6 @@ export async function registerServiceProvider(req, res) {
             password
         } = req.body;
 
-        // Check if email already exists
         const existingUser = await User.findOne({ email });
 
         if (existingUser) {
@@ -147,35 +278,74 @@ export async function registerServiceProvider(req, res) {
             });
         }
 
-        // Hash password
         const saltRounds = 12;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        // Create service provider
+        // Generate email verification code
+        const verificationCode = generateVerificationCode();
+
+        // Hash verification code before storing it
+        const hashedVerificationCode =
+            hashVerificationCode(verificationCode);
+
+        // Code expires in 10 minutes
+        const verificationExpires = new Date(
+            Date.now() + 10 * 60 * 1000
+        );
+
         const newServiceProvider = new User({
             firstname,
             lastname,
             email,
             password: hashedPassword,
-            role: "serviceProvider"
+            role: "serviceProvider",
+
+            isEmailVerified: false,
+            emailVerificationCode: hashedVerificationCode,
+            emailVerificationExpires: verificationExpires
         });
 
         await newServiceProvider.save();
 
+        // Send verification email
+        try {
+            await sendVerificationEmail(
+                newServiceProvider.email,
+                verificationCode
+            );
+        } catch (emailError) {
+            console.error(
+                "Verification email error:",
+                emailError
+            );
+
+            // Delete account if email could not be sent
+            await User.findByIdAndDelete(newServiceProvider._id);
+
+            return res.status(500).json({
+                message:
+                    "Account could not be created because the verification email could not be sent."
+            });
+        }
+
         return res.status(201).json({
-            message: "Service provider account created successfully.",
-            token: generateToken(newServiceProvider)
+            message:
+                "Account created. Please verify your email.",
+            email: newServiceProvider.email
         });
 
     } catch (error) {
-        console.error("Service provider registration error:", error);
+        console.error(
+            "Service provider registration error:",
+            error
+        );
 
         return res.status(500).json({
-            message: "An error occurred while creating your account."
+            message:
+                "An error occurred while creating your account."
         });
     }
 }
-
 
 export async function Login(req, res) {
     try {

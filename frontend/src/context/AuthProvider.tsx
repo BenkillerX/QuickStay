@@ -65,7 +65,6 @@ export const AuthProvider = ({
   };
 
   // Register tenant
-  // Tenant must verify email before becoming authenticated.
   const register = async (
     firstname: string,
     lastname: string,
@@ -85,69 +84,53 @@ export const AuthProvider = ({
   };
 
   // Register property owner
-  const registerOwner = async (
-    firstname: string,
-    lastname: string,
-    email: string,
-    password: string
-  ): Promise<User> => {
-    const response = await api.post(
-      "/api/auth/register/property-owner",
-      {
-        firstname,
-        lastname,
-        email,
-        password,
-      }
-    );
+const registerOwner = async (
+  firstname: string,
+  lastname: string,
+  email: string,
+  password: string
+): Promise<{ email: string }> => {
+  const response = await api.post(
+    "/api/auth/register/property-owner",
+    {
+      firstname,
+      lastname,
+      email,
+      password,
+    }
+  );
 
-    const token = response.data.token;
-
-    localStorage.setItem("token", token);
-
-    const userResponse = await api.get("/api/auth/me");
-
-    const user = userResponse.data.user;
-
-    setCurrentUser(user);
-
-    return user;
+  return {
+    email: response.data.email,
   };
+};
 
   // Register service provider
   const registerServiceProvider = async (
-    firstname: string,
-    lastname: string,
-    email: string,
-    password: string
-  ): Promise<User> => {
-    const response = await api.post(
-      "/api/auth/register/service-provider",
-      {
-        firstname,
-        lastname,
-        email,
-        password,
-      }
-    );
+  firstname: string,
+  lastname: string,
+  email: string,
+  password: string
+): Promise<{ email: string }> => {
+  const response = await api.post(
+    "/api/auth/register/service-provider",
+    {
+      firstname,
+      lastname,
+      email,
+      password,
+    }
+  );
 
-    const token = response.data.token;
-
-    localStorage.setItem("token", token);
-
-    const userResponse = await api.get("/api/auth/me");
-
-    const user = userResponse.data.user;
-
-    setCurrentUser(user);
-
-    return user;
+  return {
+    email: response.data.email,
   };
+};
 
 const verifyEmail = async (
   email: string,
   code: string
-): Promise <VerifyEmailResponse> => {
+): Promise<VerifyEmailResponse> => {
   const response = await api.post(
     "/api/auth/verify-email",
     {

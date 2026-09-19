@@ -43,7 +43,27 @@ const handleSubmit = async (
    localStorage.setItem("token", result.token);
   setCurrentUser(result.user);
 
-navigate("/tenant/onboarding");
+if (result.user.role === "tenant") {
+  if (!result.user.onboardingCompleted) {
+    navigate("/tenant/onboarding");
+  } else {
+    navigate("/tenant/");
+  }
+} else if (result.user.role === "propertyOwner") {
+  if (!result.user.onboardingCompleted) {
+    navigate("/owner/onboarding");
+  } else {
+    navigate("/owner/");
+  }
+} else if (result.user.role === "serviceProvider") {
+  if (!result.user.onboardingCompleted) {
+    navigate("/provider/onboarding");
+  } else {
+    navigate("/provider/");
+  }
+} else if (result.user.role === "admin") {
+  navigate("/admin/");
+}
   } catch (error: unknown) {
     console.log(error);
   } finally {
@@ -51,18 +71,15 @@ navigate("/tenant/onboarding");
   }
 };
 
-  const handleResend = async () => {
-    setResending(true);
+ const handleResend = async () => {
+  setResending(true);
 
-    try {
-
-      console.log("Resending code to:", email);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setResending(false);
-    }
-  };
+  try {
+    alert("Resend verification code — coming soon!");
+  } finally {
+    setResending(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-10">
