@@ -8,13 +8,13 @@ router.get("/send-email", async (req, res) => {
     await sendVerificationEmail("benedictakhere802@gmail.com");
 
     res.status(200).json({
-      message: "Test email sent successfully",
+      message: "Email sent successfully",
     });
   } catch (error) {
     console.error("Email error:", error);
 
     res.status(500).json({
-      message: "Failed to send test email",
+      message: "Failed to send email",
     });
   }
 });

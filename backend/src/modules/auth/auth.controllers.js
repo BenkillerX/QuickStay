@@ -348,8 +348,12 @@ export const emailValidation = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Email verification error:", error);
-
+     console.error(
+    "Verification email error:",
+    emailError instanceof Error
+        ? emailError.message
+        : emailError
+);
         return res.status(500).json({
             message: "An error occurred while verifying your email."
         });

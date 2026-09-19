@@ -1,38 +1,92 @@
-import nodemailer from "nodemailer";
-console.log("SMTP HOST:", process.env.SMTP_HOST);
-console.log("SMTP PORT:", process.env.SMTP_PORT);
-console.log("SMTP USER:", process.env.SMTP_USER);
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: false,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
+import { BrevoClient } from "@getbrevo/brevo";
+
+const brevo = new BrevoClient({
+  apiKey: process.env.BREVO_API_KEY,
 });
 
-
 export const sendVerificationEmail = async (email, code) => {
-    await transporter.sendMail({
-       from: `"GreenSpringHomes" <devben289@gmail.com>`,
-        to: email,
-        subject: "Verify your GreenSpringHomes email",
-        text: `Your GreenSpringHomes verification code is ${code}. This code expires in 10 minutes.`,
-        html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
-                <h2>Verify your GreenSpringHomes email</h2>
+  const response = await brevo.transactionalEmails.sendTransacEmail({
+    sender: {
+      name: "GreenSpringHomes",
+      email: process.env.BREVO_SENDER_EMAIL,
+    },
 
-                <p>Thank you for creating an account with GreenSpringHomes.</p>
+    to: [
+      {
+        email,
+      },
+    ],
 
-                <p>Your verification code is:</p>
+    subject: "Verify your GreenSpringHomes email",
 
-                <h1 style="letter-spacing: 8px;">${code}</h1>
+    textContent: `Your GreenSpringHomes verification code is ${code}. This code expires in 10 minutes.`,
 
-                <p>This code expires in <strong>10 minutes</strong>.</p>
+    htmlContent: `
+      <div style="
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        color: #1f2937;
+      ">
 
-                <p>If you did not create this account, you can ignore this email.</p>
-            </div>
-        `,
-    });
+        <h2 style="
+          color: #15803d;
+          margin-bottom: 24px;
+        ">
+          Verify your GreenSpringHomes email
+        </h2>
+
+        <p>
+          Thank you for creating an account with GreenSpringHomes.
+        </p>
+
+        <p>
+          Please use the verification code below to verify your email address:
+        </p>
+
+        <div style="
+          margin: 30px 0;
+          padding: 20px;
+          background: #f0fdf4;
+          border-radius: 12px;
+          text-align: center;
+        ">
+          <h1 style="
+            letter-spacing: 8px;
+            font-size: 32px;
+            margin: 0;
+            color: #15803d;
+          ">
+            ${code}
+          </h1>
+        </div>
+
+        <p>
+          This code expires in <strong>10 minutes</strong>.
+        </p>
+
+        <p style="
+          margin-top: 30px;
+          color: #6b7280;
+          font-size: 14px;
+        ">
+          If you did not create this account, you can safely ignore this email.
+        </p>
+
+        <p style="
+          margin-top: 30px;
+          color: #9ca3af;
+          font-size: 12px;
+        ">
+          © ${new Date().getFullYear()} GreenSpringHomes
+        </p>
+
+      </div>
+    `,
+  });
+
+  console.log("Verification email sent:", response.messageId);
+
+  return response;
 };

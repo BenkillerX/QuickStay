@@ -8,7 +8,6 @@ const VerifyEmail = () => {
   const navigate = useNavigate();
   const {verifyEmail} = useAuth()
   const email = location.state?.email || "your email address";
-
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
@@ -37,8 +36,9 @@ const VerifyEmail = () => {
   setLoading(true);
 
   try {
-    await verifyEmail(email, code);
-
+  const verifiedData = await verifyEmail(email, code);
+    console.log(verifiedData);
+    
     navigate("/tenant/onboarding");
   } catch (error: unknown) {
     console.log(error);
