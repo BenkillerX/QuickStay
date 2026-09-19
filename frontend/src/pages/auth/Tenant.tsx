@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { useAuth } from "../../context/useAuth"
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Tenant = () => {
     const {register} = useAuth()
@@ -12,7 +13,10 @@ const Tenant = () => {
     const [password, setPassword] = useState("")
     const [errors, setErrors] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
-
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+  function toggleEye() {
+  setShowPassword((prev) => !prev);
+}
 async function handleRegister(
   e: React.FormEvent<HTMLFormElement>
 ) {
@@ -22,35 +26,16 @@ async function handleRegister(
   setLoading(true);
 
   try {
-    const user = await register(
+    const result = await register(
       firstname,
       lastname,
       email,
       password
     );
 
-    if (user.role === "tenant") {
-      if (!user.onboardingCompleted) {
-        navigate("/tenant/onboarding");
-      } else {
-        navigate("/tenant/");
-      }
-    } else if (user.role === "propertyOwner") {
-      if (!user.onboardingCompleted) {
-        navigate("/owner/onboarding");
-      } else {
-        navigate("/owner/");
-      }
-    } else if (user.role === "serviceProvider") {
-      if (!user.onboardingCompleted) {
-        navigate("/provider/onboarding");
-      } else {
-        navigate("/provider/");
-      }
-    } else if (user.role === "admin") {
-      navigate("/admin/");
-    }
-
+    navigate("/verify-email", {
+      state: { email: result.email },
+    });
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       const data = error.response?.data;
@@ -236,29 +221,42 @@ async function handleRegister(
           </div>
 
           {/* Password */}
-          <div className="flex flex-col gap-2">
+         <div className="flex flex-col gap-2">
+  <label
+    htmlFor="password"
+    className="text-sm font-medium text-gray-700"
+  >
+    Password
+  </label>
 
-            <label
-              htmlFor="password"
-              className="text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
+  <div className="relative">
+    <input
+      id="password"
+      type={showPassword ? "text" : "password"}
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+      placeholder="Create a strong password"
+      className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl outline-none transition focus:border-green-500 focus:ring-4 focus:ring-green-500/10 placeholder:text-gray-400"
+    />
 
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Create a strong password"
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl outline-none transition focus:border-green-500 focus:ring-4 focus:ring-green-500/10 placeholder:text-gray-400"
-            />
+    <button
+      type="button"
+      onClick={toggleEye}
+      aria-label={showPassword ? "Hide password" : "Show password"}
+      className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-gray-400 hover:text-gray-600 transition"
+    >
+      {showPassword ? (
+        <FiEyeOff size={20} />
+      ) : (
+        <FiEye size={20} />
+      )}
+    </button>
+  </div>
 
-            <p className="text-xs text-gray-400">
-              Use at least 8 characters for better security.
-            </p>
-
-          </div>
+  <p className="text-xs text-gray-400">
+    Use at least 8 characters for better security.
+  </p>
+</div>
 
           {/* Submit */}
           <button

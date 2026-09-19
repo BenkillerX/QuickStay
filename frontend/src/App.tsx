@@ -31,6 +31,7 @@ import OwnerSettings from "./pages/landlord/OwnerSettings"
 import ScrollToTop from "./components/common/ScrollToTop"
 import Help from "./pages/public/Help"
 import BackToTop from "./components/common/BackToTop"
+import VerifyEmail from "./pages/auth/VerifyEmail"
 
 const App = () => {
   return (
@@ -76,7 +77,7 @@ const App = () => {
          <Route path="/tenant/onboarding" element={<TenantOnboarding/>}/>
          <Route path="/provider/onboarding" element={<ServiceProviderOnboarding/>}/>
          <Route path="/owner/onboarding" element={<PropertyOwnerOnboarding/>}/>
-        
+        <Route path="/verify-email" element={<VerifyEmail/>}/>
       </Routes>
       <BackToTop/>
     </>

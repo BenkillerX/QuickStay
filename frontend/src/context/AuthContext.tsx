@@ -20,12 +20,12 @@ export interface AuthContextType {
     password: string
   ) => Promise<User>;
 
-  register: (
-    firstname: string,
-    lastname: string,
-    email: string,
-    password: string
-  ) => Promise<User>;
+ register: (
+  firstname: string,
+  lastname: string,
+  email: string,
+  password: string
+) => Promise<{ email: string }>;
 
   registerOwner: (
     firstname: string,
@@ -40,7 +40,10 @@ export interface AuthContextType {
     email: string,
     password: string
   ) => Promise<User>;
-
+ verifyEmail: (
+  email: string,
+  code: string
+) => Promise<unknown>;
   logout: () => void;
   loading: boolean;
 }

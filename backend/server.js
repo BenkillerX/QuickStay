@@ -1,12 +1,13 @@
+import "dotenv/config";
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors"
 import { connectDb } from "./src/config/db.js";
 import authRoutes from "./src/modules/auth/auth.routes.js";
 import onboardingRoutes from "./src/modules/onboarding/onboarding.routes.js";
 import propertyRoutes from "./src/modules/properties/properties.routes.js";
 import messagesRoutes from "./src/modules/messages/messages.routes.js";
-dotenv.config()
+import emailRouter from "./src/modules/email/email.route.js";
+
 
 
 const app = express()
@@ -17,12 +18,14 @@ app.use('/api/auth', authRoutes)
 app.use('/api/onboarding', onboardingRoutes)
 app.use('/api/properties', propertyRoutes)
 app.use('/api/messages/conversations', messagesRoutes)
-
+app.use("/api/email", emailRouter);
 app.get('/', (_, res)=>{
     return res.json({
         message:"Hello World and first live deployed backend and live"
     })
 })
+console.log(PORT);
+
 connectDb().then(()=>{
     app.listen(PORT,()=>{
         console.log(`Server Running on ${PORT}`);        

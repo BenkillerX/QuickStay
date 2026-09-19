@@ -40,6 +40,7 @@ export const AuthProvider = ({
     restoreUser();
   }, []);
 
+  // Login existing user
   const login = async (
     email: string,
     password: string
@@ -62,12 +63,14 @@ export const AuthProvider = ({
     return user;
   };
 
+  // Register tenant
+  // Tenant must verify email before becoming authenticated.
   const register = async (
     firstname: string,
     lastname: string,
     email: string,
     password: string
-  ): Promise<User> => {
+  ): Promise<{ email: string }> => {
     const response = await api.post("/api/auth/register/tenant", {
       firstname,
       lastname,
@@ -75,19 +78,12 @@ export const AuthProvider = ({
       password,
     });
 
-    const token = response.data.token;
-
-    localStorage.setItem("token", token);
-
-    const userResponse = await api.get("/api/auth/me");
-
-    const user = userResponse.data.user;
-
-    setCurrentUser(user);
-
-    return user;
+    return {
+      email: response.data.email,
+    };
   };
 
+  // Register property owner
   const registerOwner = async (
     firstname: string,
     lastname: string,
@@ -117,6 +113,7 @@ export const AuthProvider = ({
     return user;
   };
 
+  // Register service provider
   const registerServiceProvider = async (
     firstname: string,
     lastname: string,
@@ -146,25 +143,39 @@ export const AuthProvider = ({
     return user;
   };
 
+const verifyEmail = async (
+  email: string,
+  code: string
+) => {
+  const response = await api.post("/api/auth/verify-email", {
+    email,
+    code,
+  });
+
+  return response.data;
+};
+
+
   const logout = (): void => {
     setCurrentUser(null);
     localStorage.removeItem("token");
   };
 
   return (
-   <AuthContext.Provider
-  value={{
-  currentUser,
-  setCurrentUser,
-  loading,
-  login,
-  register,
-  registerOwner,
-  registerServiceProvider,
-  logout,
-}}
->
-  {children}
-</AuthContext.Provider>
+    <AuthContext.Provider
+      value={{
+        currentUser,
+        setCurrentUser,
+        loading,
+        login,
+        register,
+        registerOwner,
+        registerServiceProvider,
+        verifyEmail,
+        logout,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
   );
 };

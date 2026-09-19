@@ -2,6 +2,9 @@ import { generateRefreshToken, generateToken } from "../../utils/generateToken.j
 import Session from "../models/Session.js";
 import User from "../models/Users.js";
 import bcrypt from "bcrypt"
+import { sendVerificationEmail } from "../../services/emailService.js";
+import { generateVerificationCode, hashVerificationCode } from "../../utils/emailVerification.js";
+
 
 
 export async function registerTenant(req, res) {
@@ -23,21 +26,45 @@ export async function registerTenant(req, res) {
 
         const saltRounds = 12;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
+        const verificationCode = generateVerificationCode();
 
+const hashedVerificationCode = hashVerificationCode(verificationCode);
+
+const verificationExpires = new Date(
+    Date.now() + 10 * 60 * 1000
+);
         const newTenant = new User({
-            firstname,
-            lastname,
-            email,
-            password: hashedPassword,
-            role: "tenant"
-        });
+    firstname,
+    lastname,
+    email,
+    password: hashedPassword,
+    role: "tenant",
 
-        await newTenant.save();
+    isEmailVerified: false,
+    emailVerificationCode: hashedVerificationCode,
+    emailVerificationExpires: verificationExpires
+});
 
+       await newTenant.save();
+
+try {
+    await sendVerificationEmail(
+        newTenant.email,
+        verificationCode
+    );
+} catch (emailError) {
+    console.error("Verification email error:", emailError);
+
+    await User.findByIdAndDelete(newTenant._id);
+
+    return res.status(500).json({
+        message: "Account could not be created because the verification email could not be sent."
+    });
+}
         return res.status(201).json({
-            message: "Tenant account created successfully.",
-            token: generateToken(newTenant)
-        });
+    message: "Account created. Please verify your email.",
+    email: newTenant.email
+});
 
     } catch (error) {
         console.error("Tenant registration error:", error);
@@ -260,6 +287,71 @@ export const updateCurrentUser = async (req, res) => {
 
         return res.status(500).json({
             message: "An error occurred on the server"
+        });
+    }
+};
+
+export const emailValidation = async (req, res) => {
+    try {
+        const { email, code } = req.body;
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found."
+            });
+        }
+
+        if (user.isEmailVerified) {
+            return res.status(400).json({
+                message: "Email is already verified."
+            });
+        }
+
+        if (
+            !user.emailVerificationExpires ||
+            user.emailVerificationExpires < new Date()
+        ) {
+            return res.status(400).json({
+                message: "Verification code has expired."
+            });
+        }
+
+        const hashedCode = hashVerificationCode(code);
+
+        if (hashedCode !== user.emailVerificationCode) {
+            return res.status(400).json({
+                message: "Invalid verification code."
+            });
+        }
+
+        // Verification successful
+        user.isEmailVerified = true;
+        user.emailVerificationCode = undefined;
+        user.emailVerificationExpires = undefined;
+
+        await user.save();
+
+        return res.status(200).json({
+            message: "Email verified successfully.",
+            token: generateToken(user),
+            user: {
+                id: user._id,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                email: user.email,
+                role: user.role,
+                isEmailVerified: user.isEmailVerified,
+                onboardingCompleted: user.onboardingCompleted
+            }
+        });
+
+    } catch (error) {
+        console.error("Email verification error:", error);
+
+        return res.status(500).json({
+            message: "An error occurred while verifying your email."
         });
     }
 };
